@@ -1,0 +1,28 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bequietsoft/core.git"
+  },
+  "author": "OLeg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bequietsoft/core/issues"
+  },
+  "homepage": "https://github.com/bequietsoft/core#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "mime": "^2.4.6"
+  }
+}
