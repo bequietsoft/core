@@ -1,5 +1,14 @@
 body {
 	margin: 0px;
 	overflow: hidden;
-	background-color:rgb(141, 141, 141);
+	background-color: white;
 }
+
+.inner {
+	width: 100%;
+	text-align: center;
+  }
+ 
+  img {
+	display:inline-block;
+  }

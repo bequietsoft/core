@@ -3,6 +3,25 @@ import { mat, rgb } from "./material_v2.js";
 import { V, GV, DP, DV, MV, RV, LV, V0 } from "./vectors.js";
 import { clamp, d2r } from "./tools.js";
 
+// function sphere(radius, position, rotation, material, shadow = false, devisions = 2) {
+// 	var geometry = new THREE.SphereBufferGeometry(radius, devisions, devisions);
+// 	var mesh = new THREE.Mesh(geometry, material);
+// 	mesh.position.set(position.x, position.y, position.z);
+// 	mesh.rotation.set(rotation.x, rotation.y, rotation.z);
+// 	mesh.castShadow = shadow;
+// 	mesh.reciveShadow = shadow;
+// 	return mesh;
+// }
+
+// function marker( position, color, size, div, visible ) {
+// 	let material = mat( 'basic', color );
+// 	let marker = sphere( size, position, V0, material, false, div );
+// 		marker.renderOrder = 999;
+// 		marker.visible = visible;
+// 		marker.onBeforeRender = function( renderer ) { renderer.clearDepth(); };
+// 	return marker;
+// }
+
 export var default_cincture_data = {
 	
 	name: 'default_cincture_name',
@@ -39,6 +58,7 @@ export var default_cincture_data = {
 	material: mat( 'phong', rgb( 200, 200, 200 ), true ),
 	shadows: { cast: true, recive: true },
 	helpers: 0,
+	bone_markers: true,
 	vertices_epsilon: 0.001,
 	cloth: false,
 	clamp_cinc: { begin: 0, end: 1000000 },
@@ -570,8 +590,8 @@ export class Cincture_V2 {
 				}
 				
 				if( nmf == 1 ) { 
-					//bone.marker = marker( nmv, color, 0.004, 8, false );
-					//bone.add( bone.marker );
+					// bone.marker = marker( nmv, color, 0.004, 8, this.data.node_markers );
+					// bone.add( bone.marker );
 				}
 			}
 

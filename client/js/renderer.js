@@ -18,6 +18,7 @@ export default class Renderer  {
 
 		document.body.appendChild(renderer.domElement);
 		Renderer.instance = renderer;
+		Renderer.instance.domElement.hidden = true;
 	}
 
 	static resize() {
@@ -25,6 +26,7 @@ export default class Renderer  {
 			Renderer.width = window.innerWidth;
 			Renderer.height = window.innerHeight;
 			Renderer.instance.setSize(Renderer.width, Renderer.height);
+			Renderer.instance.domElement.hidden = false;
 		}
 	}
 

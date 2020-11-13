@@ -1,6 +1,7 @@
 import * as THREE from "./three.module.js"
 import App from "./app.js";
 import Material from "./material.js";
+import { mat, tmat } from "./material_v2.js";
 import Vector from "./vector.js";
 import Craft from "./craft.js";
 
@@ -38,10 +39,11 @@ class World {
 			App.camera.target = new THREE.Object3D();
 			App.camera.root.add(App.camera.target);
 			App.camera.target.add(App.camera);
-			App.camera.position.x -= 10;
-			App.camera.root.rotateY(Math.PI/4);
+			App.camera.position.x -= 3;
+			App.camera.root.rotateY(Math.PI/8);
+			
 			//App.camera.root.rotateY(-Math.PI/4);
-			App.camera.target.rotateZ(-Math.PI/4); 
+			App.camera.target.rotateZ(-Math.PI/8); 
 			App.camera.lookAt(App.camera.root.position);
 
 		App.scene.add(App.hemiLight);
@@ -50,6 +52,8 @@ class World {
 		App.scene.add(App.world);
 		App.scene.add(App.camera.root);
 
+		App.camera.root.position.y += 0.5;
+
 		World.demo_start();
 	}
 
@@ -57,8 +61,9 @@ class World {
 		//World.helpers();
 		//World.demo_scene_01();
 		//World.demo_scene_02();
-		//World.demo_scene_03();
-		World.demo_scene_04();
+		//World.demo_scene_03(1); // cincture_v1
+		//World.demo_scene_04(1); // cincture_v2
+		World.demo_scene_05(); // cincture_v2
 	}
 
 	static demo_scene_01() {
@@ -75,21 +80,54 @@ class World {
 		);
 	}
 
-	static demo_scene_03() {
-		var wm = Material.create("standard", 0xffffff);
-		let object_cnt = 3;
+	static demo_scene_03(object_cnt) {
+
+		let wm = Material.create("standard", 0xffffff);
+
+		//let object_cnt = 3;
 		let step = 1.5;
 		let offset = -((object_cnt-1) * step) / 2;
+
 		for(let d=1; d<=object_cnt; d++) {
-			let cinc = Craft.cincture(d, App.scene, wm, 0, true);
+			let cinc = Craft.cincture_v1(d, App.scene, wm, 0, true);
 			cinc.object.position.x = offset + (d-1) * step;
+			//cinc.object.position.z = -1;
 			App.scene.add(cinc.object);
 		}
 	}
 
-	static demo_scene_04() {
-		let cinc = Craft.cincture_v2();
+	static demo_scene_04(object_cnt) {
+		
+		//let wm = tmat('../img/uvgrid.jpg');
+		let wm = mat('standard', 0xffffff);
+		//let wm = mat('wire', 0x000000);
+
+		//let object_cnt = 3;
+		let step = 1.5;
+		let offset = -((object_cnt-1) * step) / 2;
+
+		for(let d=1; d<=object_cnt; d++) {
+			let cinc = Craft.cincture_v2(d, wm);
+			App.scene.add(cinc.mesh);
+			cinc.mesh.position.x = offset + (d-1) * step;
+
+			// let cinc2 = Craft.cincture_v2(d, wm);
+			// App.scene.add(cinc2.mesh);
+			// cinc2.mesh.position.x = offset + (d-1) * step + 1;
+			// cinc2.mesh.position.y += 1;
+			// cinc2.mesh.rotation.z += Math.PI;
+
+		}
+	}
+
+	static demo_scene_05() {
+		let d = 2;
+		let wm = mat('standard', 0xffffff);
+		let cinc = Craft.cincture_v2(d, wm);
 		App.scene.add(cinc.mesh);
+		cinc.mesh.position.x += 0.5;
+		cinc.mesh.position.y += 0.5;
+		cinc.mesh.rotation.z += Math.PI/2;
 	}
 
 	static helpers() {
