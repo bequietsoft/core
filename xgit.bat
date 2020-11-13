@@ -46,7 +46,8 @@ GOTO :MENU
 
 :GIT_FETCH
 git log --oneline
-git push -f origin master
+git fetch --all
+git reset --hard origin/master
 ECHO.
 GOTO :MENU
 
