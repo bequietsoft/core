@@ -1,0 +1,64 @@
+body {
+	margin: 0px;
+	overflow: hidden;
+	background-color: white;
+}
+/* 
+.inner {
+	width: 100%;
+	text-align: center;
+}
+
+img {
+	display:inline-block;
+}
+
+.login_form {
+	position: absolute;
+	width: 20%;
+	padding: 10px;
+	margin: 10px;
+	background-color: white;
+	border-radius: 5px;
+	visibility: hidden;
+}
+
+input {
+	margin: 5px;
+	flex: auto;
+	border-style: none;
+	border-bottom: orange;
+	border-width: 1px;
+}
+
+button {
+	margin: 5px;
+} */
+
+.loader {
+	width: 130px;
+	height: 95px;
+	background-color: red;
+	overflow: hidden;
+	margin: -50px 0px 0px -90px;
+}
+
+.login_form {
+	position: absolute;
+	left: -200px;
+	width: 210px;
+	
+	background-color: silver;
+	
+	/* visibility: hidden; */
+}
+
+.test {
+	/* flex: 0.0001 1 180px; */
+	position: absolute;
+	width: 200;
+	height: 200;
+	transition: flex 0.3s ease;	
+	background-color: wheat;
+	visibility: hidden;
+}

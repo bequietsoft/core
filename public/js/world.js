@@ -1,5 +1,5 @@
 import * as THREE from "./three.module.js"
-import App from "./app.js";
+import App from "./app1.js";
 import Material from "./material.js";
 import { mat, tmat } from "./material_v2.js";
 import Vector from "./vector.js";
@@ -125,9 +125,9 @@ class World {
 		let wm = mat('standard', 0xffffff);
 		let cinc = Craft.cincture_v2(d, wm);
 		App.scene.add(cinc.mesh);
-		cinc.mesh.position.x += 0.5;
-		cinc.mesh.position.y += 0.5;
-		cinc.mesh.rotation.z += Math.PI/2;
+		// cinc.mesh.position.x += 0.5;
+		// cinc.mesh.position.y += 0.5;
+		// cinc.mesh.rotation.z += Math.PI/2;
 	}
 
 	static helpers() {

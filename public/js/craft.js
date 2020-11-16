@@ -79,17 +79,17 @@ class Craft {
 		//console.log(data);
 
 		let cinctures_cnt = 4 * d;
-		let spokes_cnt = 4 * d;
+		let spokes_cnt = 8 * d;
 
 		let cinctures_base = 0.4 / d;
 		let cinctures_deviation = 0.0;	
 		let spokes_base = 0.5;
 		let spokes_deviation = 0.0;
-		
+		console.log('cinctures_cnt=' + cinctures_cnt);
 		for (let c=0; c < cinctures_cnt; c++) {
 			
-			let k = Math.sin(Math.PI * (c+1) / (cinctures_cnt));
-
+			//let k = Math.sin(Math.PI * (c+1) / (cinctures_cnt));
+			let k = Math.sin(Math.PI * (c) / (cinctures_cnt-1));
 			for (let s=0; s < spokes_cnt; s++) {
 				let spoke = spokes_base + rndf(0, spokes_deviation);
 				spoke *= k;
@@ -105,7 +105,11 @@ class Craft {
 			data.offsets.push(0.0, offset_y, 0.0);
 			data.rotates.push(rotation_x, 0.0, 0.0);
 
-			console.log(c + ' -- ' + (spokes_base * k).toFixed(2) + ' -- ' + offset_y.toFixed(2) + ' -- ' + k.toFixed(2) );
+			console.log(
+				'c=' + c +
+				' spokes=' + (spokes_base * k).toFixed(2) + 
+				' offset=' + offset_y.toFixed(2) + 
+				' ' + k.toFixed(2) );
 		}
 
 		data.cap = { begin: false, end: false };

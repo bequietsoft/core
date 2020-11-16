@@ -1,42 +1,18 @@
-const http = require('http')
-const fs = require('fs')
-const mime = require('mime')
-const root = '/client'
+const express = require('express');
+const Datastore = require('nedb');
+const authRoutes = require('./routes/authRoutes');
 
-function send(url, res) {
-    
-    if (url === '/') 
-        url += 'index.html'
-    else if ( !mime.getType(url) ) {
-        console.log('No recognised MIME type: ' + url);
-        return;
-    }
+const app = express();
 
-    fs.readFile(__dirname + root + url, (err, data) => {
-        res.setHeader('Content-Type', mime.getType(url))
-        res.writeHead(200)
-        if (err) { res.writeHead(404); data = 404; }
-        res.end(data)
-    })
-}
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
-var server = http.createServer((req, res) => {
-        
-    if (req.method === 'GET') send(req.url, res)
-        
-    if(req.method === 'POST') {
-        if (req.body === undefined) req.body = ''
-        req.on('data', chunk => {
-            req.body += chunk.toString();
-        })
-    }
+let db = new Datastore({filename: 'users'});
+db.loadDatabase();
 
-    req.on('end', () => {
-        if(req.body) {
-            console.log(req.body)
-            res.end('ok')
-        }
-    })
-})
+// routes
+app.get('/', (req, res) => res.render('home'));
+app.get('/smoothies', (req, res) => res.render('smoothies'));
+app.use(authRoutes);
 
-server.listen('3000', () => console.log('http://localhost:3000'))
+app.listen(3000);
