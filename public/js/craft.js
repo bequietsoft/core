@@ -86,6 +86,7 @@ class Craft {
 		let spokes_base = 0.5;
 		let spokes_deviation = 0.0;
 		console.log('cinctures_cnt=' + cinctures_cnt);
+		
 		for (let c=0; c < cinctures_cnt; c++) {
 			
 			//let k = Math.sin(Math.PI * (c+1) / (cinctures_cnt));

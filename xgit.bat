@@ -6,6 +6,8 @@ ECHO r - reset
 ECHO c - commit
 ECHO p - push
 ECHO f - fetch
+ECHO t - test
+ECHO s - start
 ECHO x - exit
 ECHO.
 
@@ -15,6 +17,8 @@ IF %M%==r GOTO GIT_RESET
 IF %M%==c GOTO GIT_COMMIT
 IF %M%==p GOTO GIT_PUSH
 IF %M%==f GOTO GIT_FETCH
+IF %M%==t GOTO NODE_TEST
+IF %M%==s GOTO NODE_START
 IF %M%==x GOTO EOF
 GOTO :INPUT
 
@@ -49,6 +53,16 @@ GOTO :MENU
 git log --oneline
 git fetch --all
 git reset --hard origin/master
+ECHO.
+GOTO :MENU
+
+:NODE_TEST
+npm test
+ECHO.
+GOTO :MENU
+
+:NODE_START
+npm start
 ECHO.
 GOTO :MENU
 

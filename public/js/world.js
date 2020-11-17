@@ -1,5 +1,5 @@
 import * as THREE from "./three.module.js"
-import App from "./app1.js";
+import App from "./app.js";
 import Material from "./material.js";
 import { mat, tmat } from "./material_v2.js";
 import Vector from "./vector.js";
