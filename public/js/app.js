@@ -24,6 +24,7 @@ class App {
 			App.fov = 50;
 			App.far = 50;
 			App.fog = 0.99;
+			App.VR = true;
 			//App.auth = false;
         // #endregion
         
@@ -31,6 +32,7 @@ class App {
         World.init();
         Mouse.init();
 		Keyboard.init();
+		Keyboard.keys.push({ code: "Backquote", event: "App.VR = !App.VR;" })
 
         App.onresize();
 		App.update();
@@ -67,9 +69,12 @@ class App {
         if(Mouse.buttons[2]) {
 			App.camera.root.rotation.y -= Mouse.dx/300;
 			App.camera.target.rotation.z -= Mouse.dy/300;
-        }
+		}
+		
+		// if(Mouse.buttons[1]) { App.VR = !App.VR; }
+
         //console.log(App.camera.position);
-        Renderer.update();
+		if (!App.VR) Renderer.update(); else Renderer.updateVR();
 	}
 }
 

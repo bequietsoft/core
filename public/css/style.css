@@ -45,12 +45,13 @@ button {
 
 .login_form {
 	position: absolute;
-	left: -200px;
+	left: 10px;
+	top: 10px;
 	width: 210px;
 	
 	background-color: silver;
 	
-	/* visibility: hidden; */
+	visibility: hidden;
 }
 
 .test {

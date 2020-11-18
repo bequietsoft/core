@@ -52,13 +52,13 @@ class World {
 		App.scene.add(App.world);
 		App.scene.add(App.camera.root);
 
-		App.camera.root.position.y += 0.5;
+		//App.camera.root.position.y += 0.5;
 
 		World.demo_start();
 	}
 
 	static demo_start() {
-		//World.helpers();
+		World.helpers();
 		//World.demo_scene_01();
 		//World.demo_scene_02();
 		//World.demo_scene_03(1); // cincture_v1
@@ -121,10 +121,12 @@ class World {
 	}
 
 	static demo_scene_05() {
-		let d = 2;
-		let wm = mat('standard', 0xffffff);
-		let cinc = Craft.cincture_v2(d, wm);
-		App.scene.add(cinc.mesh);
+		// let d = 2;
+		// let wm = mat('standard', 0xffffff);
+		let cinc1 = Craft.cincture_v2(mat('standard', 0xffffff));
+		let cinc2 = Craft.cincture_v2(mat('wire', 0xffffff));
+		App.scene.add(cinc1.mesh);
+		App.scene.add(cinc2.mesh);
 		// cinc.mesh.position.x += 0.5;
 		// cinc.mesh.position.y += 0.5;
 		// cinc.mesh.rotation.z += Math.PI/2;
@@ -133,8 +135,8 @@ class World {
 	static helpers() {
 		Craft.helper();
 		App.world.add(Craft.helper({color:0x00ff00}));
-		App.camera.root.add(Craft.helper(0.5, 0.5, 0.5, "green"));
-		App.camera.target.add(Craft.helper(0.5, 0.5, 0.5, "red"));
+		App.camera.root.add(Craft.helper(0.3, 0.3, 0.3, "green"));
+		//App.camera.target.add(Craft.helper(0.5, 0.5, 0.5, "red"));
 	}
 
 }

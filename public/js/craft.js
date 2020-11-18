@@ -68,7 +68,7 @@ class Craft {
 		return new CincturesObject(scene, material, cinctures, true, true, smooth, shadow);
 	}
 
-	static cincture_v2(d = 1, material) {
+	static cincture_v21(d = 1, material) { 
 		
 		let data = Object.assign( {}, default_cincture_data );
 		
@@ -119,6 +119,36 @@ class Craft {
 		data.smooth = { normals: 0, vertices: 0 };
 
         return new Cincture_V2(data);	
+	}
+
+	static cincture_v2(material) {
+		let cinc = new Cincture_V2();
+			cinc.clear();
+			cinc.data.material = material;
+			// cinc.data.subcincs = 4;
+			// cinc.data.subnodes = 3;
+			// cinc.data.helpers = 0.01;
+
+			let cinctures_cnt = 2;
+			let spokes_cnt = 4;
+			let node_base = 0.5;
+			
+			for (let c=0; c < cinctures_cnt; c++) {
+				
+				for (let s=0; s < spokes_cnt; s++) cinc.data.nodes.push(node_base);
+
+				//node_base += 0.1;
+
+				if (c===0) 
+					cinc.data.offsets.push(0.0, 0.0, 0.0);
+				else 
+					cinc.data.offsets.push(0.0, 0.5, 0.0);
+				
+				cinc.data.rotates.push(0.0, 0.0, 0.0);
+			}
+
+		cinc.update();
+		return cinc;
 	}
 
 	// #region TODO
