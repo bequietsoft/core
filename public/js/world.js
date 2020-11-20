@@ -54,11 +54,11 @@ class World {
 
 		//App.camera.root.position.y += 0.5;
 
+		//World.helpers();
 		World.demo_start();
 	}
 
 	static demo_start() {
-		World.helpers();
 		//World.demo_scene_01();
 		//World.demo_scene_02();
 		//World.demo_scene_03(1); // cincture_v1
