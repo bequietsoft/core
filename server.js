@@ -1,4 +1,8 @@
 const express = require('express');
+const http = require('http');
+const https = require('https');
+
+const fs = require('fs');
 const Datastore = require('nedb');
 const authRoutes = require('./routes/authRoutes');
 
@@ -15,4 +19,13 @@ db.loadDatabase();
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
 app.use(authRoutes);
 
-app.listen(3000);
+
+var httpsOptions = {
+    key: fs.readFileSync(__dirname + '/cert/private'),
+    cert: fs.readFileSync(__dirname + '/cert/cert')
+};
+
+//console.log(httpsOptions);
+
+//http.createServer(app).listen(80);
+https.createServer(httpsOptions, app).listen(443);
