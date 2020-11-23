@@ -126,7 +126,7 @@ class Craft {
 			cinc.clear();
 			cinc.data.material = material;
 			// cinc.data.subcincs = 4;
-			// cinc.data.subnodes = 3;
+			// cinc.data.subnodes = 4;
 			// cinc.data.helpers = 0.01;
 
 			let cinctures_cnt = 2;
@@ -147,7 +147,8 @@ class Craft {
 				cinc.data.rotates.push(0.0, 0.0, 0.0);
 			}
 
-		cinc.update();
+			cinc.update();
+
 		return cinc;
 	}
 

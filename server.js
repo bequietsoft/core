@@ -9,23 +9,26 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 app.use(express.static('public'));
-//app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');
 
 let db = new Datastore({filename: 'db/users'});
 db.loadDatabase();
 
 // routes
-//app.get('/', (req, res) => res.render('home'));
-app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
+app.get('/', (req, res) => res.render('index'));
 app.use(authRoutes);
 
+let https_mode = false;
+process.argv.slice(2).forEach(a => {
+	//console.log(a);
+	if (a === '-https') https_mode = true;
+});
 
-var httpsOptions = {
-    key: fs.readFileSync(__dirname + '/cert/private'),
-    cert: fs.readFileSync(__dirname + '/cert/cert')
-};
-
-//console.log(httpsOptions);
-
-//http.createServer(app).listen(80);
-https.createServer(httpsOptions, app).listen(443);
+if (https_mode) {
+	var httpsOptions = {
+		key: fs.readFileSync(__dirname + '/cert/private'),
+		cert: fs.readFileSync(__dirname + '/cert/cert')
+	};
+	https.createServer(httpsOptions, app).listen(443);
+} else 
+	http.createServer(app).listen(3000);

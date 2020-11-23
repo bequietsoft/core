@@ -1,6 +1,7 @@
 import { log } from "./tools.js";
 import * as THREE from "./three.module.js"
 
+// import SW from "./sw.js";
 import Renderer from "./renderer.js";
 import World from "./world.js";
 import Mouse from "./mouse.js";
@@ -27,7 +28,8 @@ class App {
 			App.VR = true;
 			//App.auth = false;
         // #endregion
-        
+		
+		//SW.init();
         Renderer.init();
         World.init();
         Mouse.init();

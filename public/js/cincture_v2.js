@@ -110,7 +110,7 @@ export class Cincture_V2 {
 		
 		if ( this.data.edges_mesh_build ) return;
 		
-		console.log(this.data.subcincs);
+		//console.log(this.data.subcincs);
 		
 		let _nodes_flags = [];
 		for( let ci = 0; ci < this.cincs_count; ci++ )
