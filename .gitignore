@@ -1,5 +1,5 @@
-# SSL
-cert
+# SSL keys
+*.key
 
 # Logs
 logs

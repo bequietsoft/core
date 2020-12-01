@@ -1,13 +1,19 @@
 ECHO OFF
+CLS
 
 :MENU
 ECHO.
-ECHO r - reset
-ECHO c - commit
-ECHO p - push
-ECHO f - fetch
-ECHO t - test
-ECHO s - start
+ECHO r - git reset
+ECHO c - git commit
+ECHO p - git push
+ECHO f - git fetch
+ECHO.
+ECHO i - node install
+ECHO t - nodemon test (http)
+ECHO s - node start (https)
+ECHO.
+ECHO g - gen ssl keys
+ECHO.
 ECHO x - exit
 ECHO.
 
@@ -17,8 +23,13 @@ IF %M%==r GOTO GIT_RESET
 IF %M%==c GOTO GIT_COMMIT
 IF %M%==p GOTO GIT_PUSH
 IF %M%==f GOTO GIT_FETCH
+
+IF %M%==i GOTO NODE_INSTALL
 IF %M%==t GOTO NODE_TEST
 IF %M%==s GOTO NODE_START
+
+IF %M%==g GOTO GEN_SSL
+
 IF %M%==x GOTO EOF
 GOTO :INPUT
 
@@ -54,6 +65,14 @@ git log --oneline
 git fetch --all
 git reset --hard origin/master
 ECHO.
+GOTO :MENU
+
+:GEN_SSL
+node ssl/gen.js
+GOTO :MENU
+
+:NODE_INSTALL
+node install
 GOTO :MENU
 
 :NODE_TEST

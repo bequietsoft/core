@@ -2,10 +2,10 @@
   "name": "core",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "test": "nodemon server.js -http",
-    "start": "node server.js -https"
+    "test": "nodemon app.js -http",
+    "start": "node app.js -https"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,6 @@
     "nodemon": "^2.0.6"
   },
   "dependencies": {
-    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "nedb": "^1.8.0",
     "selfsigned": "^1.10.8"
