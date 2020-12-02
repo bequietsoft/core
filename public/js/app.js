@@ -6,6 +6,7 @@ import Renderer from "./renderer.js";
 import World from "./world.js";
 import Mouse from "./mouse.js";
 import Keyboard from "./keyboard.js";
+import Touchscreen from "./touchscreen.js";
 
 class App {
 	
@@ -25,16 +26,27 @@ class App {
 			App.fov = 50;
 			App.far = 50;
 			App.fog = 0.99;
-			App.VR = true;
+			App.VR = false;
+
+			App.last_tic = performance.now();
+			App.fps = 30;
+
 			//App.auth = false;
         // #endregion
 		
 		//SW.init();
         Renderer.init();
-        World.init();
-        Mouse.init();
-		Keyboard.init();
-		Keyboard.keys.push({ code: "Backquote", event: "App.VR = !App.VR;" })
+		World.init();
+		
+		//if (App.mobile) {
+
+			Touchscreen.init();
+
+		//} else {
+			Mouse.init();
+			Keyboard.init();
+			Keyboard.keys.push({ code: "Backquote", event: "App.VR = !App.VR;" })
+		//}
 
         App.onresize();
 		App.update();
@@ -47,11 +59,19 @@ class App {
 
 	static onload() {
 		log(document.URL);
-		if(navigator.userAgent
-			.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
-			log("Mobile platform");
-			document.addEventListener("deviceready", App.ondeviceready, false);
+		console.log(navigator);
+
+		if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+			App.mobile = true;
+			if ( navigator.platform === 'Win32') {
+				log("Mobile platform (emulation)");
+				App.ondeviceready();
+			} else {
+				log("Mobile platform");
+				document.addEventListener("deviceready", App.ondeviceready, false);
+			}
 		} else {
+			App.mobile = false;
 			log("Browser platform");
 			App.ondeviceready();
 		}
@@ -61,22 +81,40 @@ class App {
 		log("Device ready");
 		App.init();
     }
-    
-    static update() {
-        requestAnimationFrame(App.update);
-        
-        Mouse.update();
+	
+	static check_fps_limit() {
+		let ct = performance.now();
+		let et = ct - App.last_tic;
+		if (et < 1000 / App.fps) return false;
+		App.last_tic = ct;
+		return true;
+	}
 
-        App.camera.position.x += Mouse.wheel/10;
-        if(Mouse.buttons[2]) {
-			App.camera.root.rotation.y -= Mouse.dx/300;
-			App.camera.target.rotation.z -= Mouse.dy/300;
+    static update() {
+		
+		requestAnimationFrame(App.update);
+
+		if (App.mobile) {
+			
+			Touchscreen.update();
+
+		} else {
+
+			Mouse.update();
+			App.camera.position.x += Mouse.wheel/10;
+			if(Mouse.buttons[2]) {
+				App.camera.root.rotation.y -= Mouse.dx/300;
+				App.camera.target.rotation.z -= Mouse.dy/300;
+			}
 		}
 		
 		// if(Mouse.buttons[1]) { App.VR = !App.VR; }
 
-        //console.log(App.camera.position);
-		if (!App.VR) Renderer.update(); else Renderer.updateVR();
+		//console.log(App.camera.position);
+		
+		if (App.check_fps_limit()) 
+			if (!App.VR) Renderer.update(); else Renderer.updateVR();
+		
 	}
 }
 

@@ -10,7 +10,7 @@ ECHO f - git fetch
 ECHO.
 ECHO i - node install
 ECHO t - nodemon test (http)
-ECHO s - node start (https)
+ECHO s - node start (https) TODO
 ECHO.
 ECHO g - gen ssl keys
 ECHO.

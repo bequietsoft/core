@@ -1,12 +1,12 @@
 {
-	"theme_color": "#f69435",
-    "background_color": "#f69435",
-    "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
-    "app_name": "core",
+	"name": "core",
     "short_name": "core",
-    "description": "Experimental VR core app",
+    "theme_color": "#2196f3",
+    "background_color": "#2196f3",
+    "display": "standalone",
+    "orientation": "landscape",
+    "start_url": ".",
+    "description": "experimental VR core app",
     "icons": [
         {
             "src": "/images/logo/icon-192x192.png",

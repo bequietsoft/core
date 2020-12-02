@@ -24,6 +24,8 @@ class Mouse {
 		Mouse._wheel = 0;
 		Mouse.wheel = 0;
 
+		Mouse.changed = false;
+
 		document.addEventListener("mousemove", Mouse.onmove.bind(this));
 		document.addEventListener("mousedown", Mouse.ondown.bind(this));
 		document.addEventListener("mouseup", Mouse.onup.bind(this));
@@ -48,15 +50,17 @@ class Mouse {
 		Mouse.path.push(Mouse.pos);
 		
 		let len = Mouse.path.length;
-		if(len > 1) { 
+		if (len > 1) { 
 			Mouse.dx = Mouse.path[len - 1][0] - Mouse.path[len - 2][0]; 
 			Mouse.dy = Mouse.path[len - 1][1] - Mouse.path[len - 2][1]; 
 			
 			Mouse.mdx = (Mouse.mdx + Mouse.dx) / 2;
 			Mouse.mdy = (Mouse.mdy + Mouse.dy) / 2;
+
+			if (Mouse.dx + Mouse.dy) Mouse.changed = true;
 		}
 
-		if(len > Mouse.max_path_length) Mouse.path.shift();
+		if (len > Mouse.max_path_length) Mouse.path.shift();
 	}
 
 	static ondown( event ) {

@@ -533,7 +533,8 @@ export class Cincture_V2 {
 	}
 
 	build_mesh() {
-		this.mesh = new THREE.SkinnedMesh( this.geometry, this.data.material );
+		this.buffer_geometry = new THREE.BufferGeometry().fromGeometry( this.geometry );
+		this.mesh = new THREE.SkinnedMesh( this.buffer_geometry, this.data.material );
 		this.mesh.castShadow = this.data.shadows.cast;
 		this.mesh.receiveShadow = this.data.shadows.recive;
 	}

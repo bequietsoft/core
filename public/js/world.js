@@ -125,7 +125,7 @@ class World {
 		// let wm = mat('standard', 0xffffff);
 		let cinc1 = Craft.cincture_v2(mat('standard', 0xffffff));
 		let cinc2 = Craft.cincture_v2(mat('wire', 0xffffff));
-		App.scene.add(cinc1.mesh);
+		//App.scene.add(cinc1.mesh);
 		App.scene.add(cinc2.mesh);
 		// cinc.mesh.position.x += 0.5;
 		// cinc.mesh.position.y += 0.5;

@@ -131,7 +131,7 @@ class Craft {
 
 			let cinctures_cnt = 2;
 			let spokes_cnt = 4;
-			let node_base = 0.5;
+			let node_base = 0.35;
 			
 			for (let c=0; c < cinctures_cnt; c++) {
 				
