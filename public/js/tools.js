@@ -1,7 +1,7 @@
-export function log(m) {
-	//m = performance.now() + "\t" + m;
-	if (typeof m === 'object') m = JSON.stringify(m);
-	console.log(m);
+export function log(msg) {
+	//msg = performance.now() + "\t" + msg;
+	if (typeof msg === 'object') msg = JSON.stringify(msg);
+	console.log(msg);
 
 	var log = document.getElementById("log");
 	
@@ -9,16 +9,21 @@ export function log(m) {
 		log = document.createElement("div");
 		log.id = 'log';
 		log.style.position = 'absolute';
-		log.style.width = '100%';
-		log.style.height = '200px';
+		// log.style.width = '100%';
+		// log.style.height = '100%';
 		log.style.backgroundColor = '0x0000FF';
 		log.style.fontFamily = 'Consolas';
-		log.style.fontSize = '4vw';
+		log.style.fontSize = '10px';
 		log.style.overflow = 'hidden';
+		log.style.padding = '4px';
 		document.body.appendChild(log);
 	}
 	
-	if (log) log.innerHTML = m + "<br>" + log.innerHTML;
+	if (log) {
+		//log.innerHTML.replace('<h1>', '').replace('</h1>', ''); 
+		//log.innerHTML = '<h1>' + msg + '</h1><br>' + log.innerHTML;
+		log.innerHTML = msg + '<br>' + log.innerHTML;
+	}
 }
 
 // random float value

@@ -2,10 +2,10 @@
   "name": "core",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "nodemon app.js -http",
-    "start": "node app.js -https"
+    "test": "nodemon server.js -http",
+    "start": "node server.js -https"
   },
   "repository": {
     "type": "git",

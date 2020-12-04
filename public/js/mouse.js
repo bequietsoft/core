@@ -1,10 +1,12 @@
 import * as THREE from "./three.module.js"
-//import App from "./app.js";
 
 class Mouse {
 	
-	static init() {
+	static init(root) {
 		
+		Mouse.root = root;
+		root.Mouse = Mouse;
+
 		// item format: [pos0, ... , pos_length] [x, y, time]
 		Mouse.path = [];		
 		Mouse.max_path_length = 10;

@@ -1,16 +1,19 @@
-import { log } from "./tools.js";
-
-class Touchscreen {
+class TouchScreen {
 	
-	static init() {
-		console.log('touchscreen init');
+	static init(root) {
 
-		Touchscreen.pos = [];
+		TouchScreen.root = root;
+		root.TouchScreen = TouchScreen;
 
-		document.addEventListener("touchcancel", Touchscreen.oncancel.bind(this));
-		document.addEventListener("touchstart", Touchscreen.onstart.bind(this));
-		document.addEventListener("touchend", Touchscreen.onend.bind(this));
-		document.addEventListener("touchmove", Touchscreen.onmove.bind(this));
+		TouchScreen.pos = [];
+		TouchScreen.events = [];
+
+		document.addEventListener("touchcancel", TouchScreen.oncancel.bind(this));
+		document.addEventListener("touchstart", TouchScreen.onstart.bind(this));
+		document.addEventListener("touchend", TouchScreen.onend.bind(this));
+		document.addEventListener("touchmove", TouchScreen.onmove.bind(this));
+		
+		return this;
 	}
 
 	static update() {
@@ -18,21 +21,39 @@ class Touchscreen {
 	}
 
 	static oncancel(event) {
-		log(event);
+		//console.log(event);
+		//TouchScreen.process(event.type);
 	}
 
 	static onstart(event) {
-		log(event);
+		console.log(event);
+		console.log(this);
 	}
 
 	static onend(event) {
-		log(event);
+		//console.log(event);
+		//TouchScreen.process(event.type);
 	}
 
 	static onmove(event) {
-		log(event);
+		//log(event);
+		//TouchScreen.process(event.type);
 	}
+
+	// static eval_in_context(callback, context) {
+	// 	return function() { 
+	// 		return eval(callback); 
+	// 	}
+	// 	.call(context);
+	// }
+
+	// static process(event_type) {
+	// 	TouchScreen.events.forEach(event => {
+    //         if(event.type == event_type) 
+	// 			TouchScreen.eval_in_context(event.callback, event.context || this);
+    //     });
+	// }
 }
 
-export default Touchscreen;
+export default TouchScreen;
 		

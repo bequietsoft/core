@@ -8,7 +8,7 @@ ECHO c - git commit
 ECHO p - git push
 ECHO f - git fetch
 ECHO.
-ECHO i - node install
+ECHO i - node install packages
 ECHO t - nodemon test (http)
 ECHO s - node start (https) TODO
 ECHO.

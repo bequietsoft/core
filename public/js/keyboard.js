@@ -4,13 +4,12 @@ import App from "./app.js";
 
 class Keyboard {
     
-	static init() {
+	static init(root) {
+        
+        Keyboard.root = root;
+        root.Keyboard = Keyboard;
+
         Keyboard.keys = [];
-        // Keyboard.keys = [ 
-        //     { code: "Backquote", event: "App.UI.Panel.ShowHide();" }, 
-        //     { code: "KeyZ", event: "console.log(Renderer.instance.xr);" } 
-        //     //{ code: "Backquote", event: "console.log(App.UI.Console);" } 
-        // ];
         document.addEventListener("keydown", Keyboard.onkeydown.bind(this));
     }
 
