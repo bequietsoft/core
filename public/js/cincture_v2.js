@@ -1,7 +1,6 @@
 import * as THREE from "./three.module.js";
 import { mat, rgb } from "./material_v2.js";
 import { V, GV, DP, DV, MV, RV, LV, V0 } from "./vectors.js";
-import { clamp, d2r } from "./tools.js";
 
 // function sphere(radius, position, rotation, material, shadow = false, devisions = 2) {
 // 	var geometry = new THREE.SphereBufferGeometry(radius, devisions, devisions);
@@ -14,7 +13,7 @@ import { clamp, d2r } from "./tools.js";
 // }
 
 // function marker( position, color, size, div, visible ) {
-// 	let material = mat( 'basic', color );
+// 	let material = mat(color, 'basic');
 // 	let marker = sphere( size, position, V0, material, false, div );
 // 		marker.renderOrder = 999;
 // 		marker.visible = visible;
@@ -55,7 +54,7 @@ export var default_cincture_data = {
 	cap_curve: { begin: 0, end: 0 },
 	cap: { begin: true, end: true },
 	closed: true,
-	material: mat( 'phong', rgb( 200, 200, 200 ), true ),
+	material: mat(rgb(200, 200, 200), 'phong'),
 	shadows: { cast: true, recive: true },
 	helpers: 0,
 	bone_markers: true,
@@ -95,8 +94,8 @@ export class Cincture_V2 {
 	}
 
 	check_data() {
-		this.data.smooth.normals = clamp( this.data.smooth.normals, 0, 1 );
-		this.data.smooth.vertices = clamp( this.data.smooth.vertices, 0, 1 );
+		this.data.smooth.normals = this.clamp( this.data.smooth.normals, 0, 1 );
+		this.data.smooth.vertices = this.clamp( this.data.smooth.vertices, 0, 1 );
 		if ( this.data.angles != undefined && this.data.nodes.length != this.data.angles.length ) 
 			log( 'Wrong parameters: nodes and angles array must be some length.' );
 	}
@@ -256,10 +255,10 @@ export class Cincture_V2 {
 
 	cals_angles() {
 
-		this.delta_angle = d2r( this.data.cinc_angle / this.nodes_count );
+		this.delta_angle = this.d2r( this.data.cinc_angle / this.nodes_count );
 		
 		if ( this.data.cinc_angle != 360 ) 
-			this.delta_angle = d2r( this.data.cinc_angle / (this.nodes_count - 1) );
+			this.delta_angle = this.d2r( this.data.cinc_angle / (this.nodes_count - 1) );
 	}
 
 	get_real_node( i ) { 
@@ -320,7 +319,7 @@ export class Cincture_V2 {
 			total_rotation.add( V( mirror * this.data.rotates[ fti + 0 ], mirror * this.data.rotates[ fti + 1 ], this.data.rotates[ fti + 2 ] ) );
 			total_position.add( RV ( scaled_offset, total_rotation) );
 
-			let angle0 = mirror * d2r( this.data.start_angle );
+			let angle0 = mirror * this.d2r( this.data.start_angle );
 			let node0;
 			let angle1;
 			let node1;
@@ -339,7 +338,7 @@ export class Cincture_V2 {
 
 				if ( ni == this.nodes_count - 1 ) 
 					if ( this.data.cinc_angle < 360 )
-						angle1 = mirror * d2r( this.data.start_angle );
+						angle1 = mirror * this.d2r( this.data.start_angle );
 
 				let cos0 = Math.cos( angle0 );
 				let sin0 = Math.sin( angle0 );
@@ -542,9 +541,9 @@ export class Cincture_V2 {
 	build_skeleton() {
 
 		// bind external skeleton
-		if ( this.data.skeleton != undefined)
+		if (this.data.skeleton != undefined)
 		{ 
-			this.mesh.bind( this.data.skeleton );
+			this.mesh.bind(this.data.skeleton);
 			return;
 		}
 
@@ -607,26 +606,26 @@ export class Cincture_V2 {
 	// UC
 	add_helpers() {
 
-		if ( this.data.helpers == 0 ) return;
+		if (this.data.helpers == 0) return;
 
 		this.edges_helper = this.mesh.clone();
-		this.edges_helper.material = mat('wire', rgb( 255, 255, 200 ));
+		this.edges_helper.material = mat(rgb(255, 255, 200), 'wire');
 		this.edges_helper.castShadow = false;
 		this.edges_helper.receiveShadow = false;
 		this.edges_helper.skeleton = undefined;
 		
 
-		this.vertex_normals_helper = new THREE.VertexNormalsHelper( this.edges_helper, this.data.helpers, 0x00ff00, 0.01 );
-		this.mesh.add( this.vertex_normals_helper );
+		this.vertex_normals_helper = new THREE.VertexNormalsHelper(this.edges_helper, this.data.helpers, 0x00ff00, 0.01);
+		this.mesh.add(this.vertex_normals_helper);
 
-		this.face_normals_helper = new THREE.FaceNormalsHelper( this.edges_helper, this.data.helpers, 0xff0000, 0.01 );
-		this.mesh.add( this.face_normals_helper );
+		this.face_normals_helper = new THREE.FaceNormalsHelper(this.edges_helper, this.data.helpers, 0xff0000, 0.01);
+		this.mesh.add(this.face_normals_helper);
 
-		this.skeleton_helper = new THREE.SkeletonHelper( this.mesh );
-		App.world.scene.add( this.skeleton_helper );
+		this.skeleton_helper = new THREE.SkeletonHelper(this.mesh);
+		App.world.scene.add(this.skeleton_helper);
 
-		this.edges_helper.bind( this.data.skeleton );
-		this.mesh.add( this.edges_helper );
+		this.edges_helper.bind(this.data.skeleton);
+		this.mesh.add(this.edges_helper);
 	}
 
 	// utils :
@@ -683,20 +682,20 @@ export class Cincture_V2 {
 	}
 
 	mark_point( p, color ) {
-		let a = sphere( 0.02, p, V0, mat('phong', color ) );
-		this.marks.push ( a );
+		let a = sphere(0.02, p, V0, mat(color, 'phong'));
+		this.marks.push(a);
 	}
 
 	mark_face( fi ) {
 		log('face ' + fi + ' marked');
 		let geometry = this.geometry;
-		let face = geometry.faces[ fi ];
-		let a = sphere( 0.02, geometry.vertices[ face.a ], V0, mat('phong', rgb(200, 0, 0) ) );
-		let b = sphere( 0.02, geometry.vertices[ face.b ], V0, mat('phong', rgb(0, 200, 0) ) );
-		let c = sphere( 0.02, geometry.vertices[ face.c ], V0, mat('phong', rgb(0, 0, 200) ) );
-		this.mesh.add( a );
-		this.mesh.add( b );
-		this.mesh.add( c );
+		let face = geometry.faces[fi];
+		let a = sphere(0.02, geometry.vertices[face.a], V0, mat(rgb(200, 0, 0), 'phong'));
+		let b = sphere(0.02, geometry.vertices[face.b], V0, mat(rgb(0, 200, 0), 'phong'));
+		let c = sphere(0.02, geometry.vertices[face.c], V0, mat(rgb(0, 0, 200), 'phong'));
+		this.mesh.add(a);
+		this.mesh.add(b);
+		this.mesh.add(c);
 	}
 
 	add_face( points, vertex_index = [ 0, 0, 0 ], skin_index = [ 0, 0, 0 ] ) {
@@ -831,7 +830,17 @@ export class Cincture_V2 {
 		return this.data.bones[ this.data.bones.length - 1 ];
 	}
 
+	// clamp value
+	clamp( v, a, b ) {
+		if ( v > b ) return b;
+		if ( v < a ) return a;
+		return v;
+	}
 
+	// convert degrees to radians
+	d2r( deg ) {
+		return deg * Math.PI / 180;
+	}
 
 	// get_real_node_value( i ) {
 	// 	return this.data.nodes[ this.get_real_node_index( i ) ] * this.data.scale; 

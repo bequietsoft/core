@@ -1,6 +1,5 @@
-import { log } from "./tools.js";
 import * as THREE from "./three.module.js"
-
+import { rndf } from "./rnd.js"; //let rndf1 = rndf;
 import Renderer from "./renderer.js";
 import World from "./world.js";
 import Mouse from "./mouse.js";
@@ -15,7 +14,9 @@ class App {
         
 		// variables
 		{	
-			App.evals = [];
+			App.THREE = THREE;
+
+			// App.evals = [];
 
 			App.debug = true;
 			App.shadows = true;
@@ -30,37 +31,36 @@ class App {
 			App.fov = 50;
 			App.far = 50;
 			App.fog = 0.99;
-			App.VR = false;
 
 			App.last_tic = performance.now();
 			App.fps = 30;
 		}
 
-		App.sw_init();
+		App.service_worker_init();
+
+		Renderer.init(this);
+		World.init(this);
 		
-		Renderer.init();
-		World.init();
-		
-		App.input_init();
+		App.input_init(this);
 
         App.onresize();
 		App.update();
     }
 
     static onresize() {
-		App.camera.aspect = window.innerWidth / window.innerHeight;
-		App.camera.updateProjectionMatrix();
+		App.World.camera.aspect = window.innerWidth / window.innerHeight;
+		App.World.camera.updateProjectionMatrix();
 	}
 
 	static onload() {
-
-		log(document.URL);
-		console.log(navigator);
+		
+		App.log(document.URL);
+		App.log(navigator);
 
 		if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
 			App.mobile = true;
-			if ( navigator.platform === 'Win32') {
-				log("Mobile platform (emulation)");
+			if (navigator.platform === 'Win32') {
+				App.log("Mobile platform (emulation)");
 				App.ondeviceready();
 			} else {
 				log("Mobile platform");
@@ -68,16 +68,16 @@ class App {
 			}
 		} else {
 			App.mobile = false;
-			log("Browser platform");
+			App.log("Browser platform");
 			App.ondeviceready();
 		}
     }
     
     static ondeviceready() {
-		log("Device ready");
+		App.log("Device ready");
 		App.init();
     }
-	
+
 	static check_fps_limit() {
 		let ct = performance.now();
 		let et = ct - App.last_tic;
@@ -86,7 +86,7 @@ class App {
 		return true;
 	}
 
-	static sw_init() {
+	static service_worker_init() {
 		if (navigator.serviceWorker) {
 			navigator.serviceWorker.register('./serviceworker.js')
 			.then(function(registration) {
@@ -100,38 +100,61 @@ class App {
 		}
 	}
 
-	static input_init(){
+	static input_init(App){
 		if (App.mobile) {
-			TouchScreen.init(this);
+			TouchScreen.init(App);
 			// TouchScreen.events.push({ 
 			// 	type: 'touchstart', callback: 'this.log(this.Gyro.sensor);', context: this
 			// });
 			//App.Gyro = Gyro;//
-			Gyro.init(this);
+			Gyro.init(App);
 		} else {
+			Mouse.init(App);
+			Keyboard.init(App);
 			
-			Mouse.init(this);
-			Keyboard.init(this);
-			Keyboard.keys.push({ code: 'Backquote', event: 'App.VR = !App.VR;' });
+			Keyboard.keys.push({ code: 'Backquote', callback: 'App.VR = !App.VR;' });
+			Keyboard.keys.push({ code: 'Digit2', callback: 'console.log(App.World.camera);' });
 		}
 	}
 
-	static eval_in_context(callback, context) {
-		return function() { 
-			return eval(callback); 
+	static log(msg) {
+	
+		//msg = performance.now() + "\t" + msg;
+
+		console.log(msg);
+
+		if (typeof msg === 'object') return;//msg = msg.toString();
+	
+		var log_element = document.getElementById("log");
+		
+		if (log_element == undefined) { 
+			log_element = document.createElement("div");
+			log_element.id = 'log';
+			log_element.style.position = 'absolute';
+			// log.style.width = '100%';
+			// log.style.height = '100%';
+			log_element.style.backgroundColor = '0x0000FF';
+			log_element.style.fontFamily = 'Consolas';
+			log_element.style.fontSize = '10px';
+			log_element.style.overflow = 'hidden';
+			log_element.style.padding = '4px';
+			document.body.appendChild(log_element);
 		}
+		
+		if (log_element) {
+			//log.innerHTML.replace('<h1>', '').replace('</h1>', ''); 
+			//log.innerHTML = '<h1>' + msg + '</h1><br>' + log.innerHTML;
+			log_element.innerHTML = msg + '<br>' + log_element.innerHTML;
+		}
+	}
+
+	static call_in_context(callback, context) {
+		return function() { return eval(callback); }
 		.call(context);
 	}
 
-	static call(event) {
-		
-		console.log(event);
-		return;
-
-		TouchScreen.events.forEach(event => {
-            if(event.type == event_type) 
-				TouchScreen.eval_in_context(event.callback, event.context || this);
-        });
+	static call(callback) {
+		App.call_in_context(callback, this);
 	}
 
     static update() {
@@ -143,10 +166,10 @@ class App {
 			Gyro.update();
 		} else {
 			Mouse.update();
-			App.camera.position.x += Mouse.wheel/10;
+			App.World.camera.position.x += Mouse.wheel/10;
 			if(Mouse.buttons[2]) {
-				App.camera.root.rotation.y -= Mouse.dx/300;
-				App.camera.target.rotation.z -= Mouse.dy/300;
+				App.World.camera.root.rotation.y -= Mouse.dx/300;
+				App.World.camera.target.rotation.z -= Mouse.dy/300;
 			}
 		}
 		
@@ -154,7 +177,10 @@ class App {
 		//console.log(App.camera.position);
 		
 		if (App.check_fps_limit()) 
-			if (!App.VR) Renderer.update(); else Renderer.updateVR();
+			if (!App.Renderer.VR) 
+				Renderer.update(); 
+			else 
+				Renderer.updateVR();
 		
 	}
 }
@@ -164,3 +190,4 @@ export default App;
 window.addEventListener("resize", App.onresize);
 window.addEventListener("load", App.onload);
 document.addEventListener('contextmenu', event => event.preventDefault());
+

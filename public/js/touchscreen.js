@@ -1,9 +1,9 @@
 class TouchScreen {
 	
-	static init(root) {
+	static init(App) {
 
-		TouchScreen.root = root;
-		root.TouchScreen = TouchScreen;
+		TouchScreen.App = App;
+		App.TouchScreen = TouchScreen;
 
 		TouchScreen.pos = [];
 		TouchScreen.events = [];
@@ -27,7 +27,7 @@ class TouchScreen {
 
 	static onstart(event) {
 		console.log(event);
-		console.log(this);
+		//console.log(this);
 	}
 
 	static onend(event) {

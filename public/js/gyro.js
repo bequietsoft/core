@@ -1,9 +1,9 @@
 class Gyro {
 	
-	static init(root) {
+	static init(App) {
 		
-		Gyro.root = root;
-		root.Gyro = Gyro;
+		Gyro.App = App;
+		App.Gyro = Gyro;
 
 		Gyro.sensor = new Gyroscope();
 		

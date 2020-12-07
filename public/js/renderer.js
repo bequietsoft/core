@@ -1,9 +1,11 @@
-import * as THREE from "./three.module.js"
-import App from "./app.js";
-
 export default class Renderer  {
 
-	static init() {
+	static init(App) {
+
+		Renderer.App = App;
+		App.Renderer = Renderer;
+
+		let THREE = App.THREE;
 
 		var renderer = new THREE.WebGLRenderer({ antialias: true });
 			renderer.depth = App.far;
@@ -20,7 +22,7 @@ export default class Renderer  {
 		Renderer.instance = renderer;
 		Renderer.instance.domElement.hidden = true;
 
-		// Renderer.VR = false;
+		Renderer.VR = false;
 	}
 	
 	static resize() {
@@ -29,7 +31,8 @@ export default class Renderer  {
 			Renderer.height = window.innerHeight;
 			
 			Renderer.instance.setSize(Renderer.width, Renderer.height);
-			if (Renderer.instance.domElement.hidden) Renderer.instance.domElement.hidden = false;
+			if (Renderer.instance.domElement.hidden) 
+				Renderer.instance.domElement.hidden = false;
 		}
 	}
 
@@ -41,7 +44,10 @@ export default class Renderer  {
 
 		Renderer.instance.setViewport(0, 0, width, height);
 		Renderer.instance.setScissor(0, 0, width, height);
-		Renderer.instance.render(App.scene, App.camera);
+		Renderer.instance.render(
+			Renderer.App.World.scene, 
+			Renderer.App.World.camera
+		);
 	}
 
 	static updateVR() {
@@ -54,20 +60,21 @@ export default class Renderer  {
 
 		Renderer.instance.setViewport(0, 0, width/2, height);
 		Renderer.instance.setScissor(0, 0, width/2, height);
-		App.camera.root.rotateY(-0.1);
-		Renderer.instance.render(App.scene, App.camera);
-		
+		App.World.camera.root.rotateY(-0.1);
+		Renderer.instance.render(
+			Renderer.App.World.scene, 
+			Renderer.App.World.camera
+		);
+
 		Renderer.instance.setViewport(width/2, 0, width/2, height);
 		Renderer.instance.setScissor(width/2, 0, width/2, height);
-		App.camera.root.rotateY(+0.2);
-		Renderer.instance.render(App.scene, App.camera);
-		App.camera.root.rotateY(-0.1);
+		App.World.camera.root.rotateY(+0.2);
+		Renderer.instance.render(
+			Renderer.App.World.scene, 
+			Renderer.App.World.camera
+		);
+		App.World.camera.root.rotateY(-0.1);
 	}
-
-	// static switch_vr() {
-	// 	Renderer.VR = !Renderer.VR;
-	// 	console.log('VR: ' + Renderer.VR);
-	// }
 }
 
 

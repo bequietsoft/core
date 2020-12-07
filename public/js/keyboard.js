@@ -1,13 +1,9 @@
-import { log } from "./tools.js";
-import App from "./app.js";
-//import Renderer from "./renderer.js";
-
 class Keyboard {
     
-	static init(root) {
+	static init(App) {
         
-        Keyboard.root = root;
-        root.Keyboard = Keyboard;
+        Keyboard.App = App;
+		App.Keyboard = Keyboard;
 
         Keyboard.keys = [];
         document.addEventListener("keydown", Keyboard.onkeydown.bind(this));
@@ -15,10 +11,11 @@ class Keyboard {
 
     static onkeydown(event) {
         
-        if(App.debug) log(event.code);
+        if(Keyboard.App.debug) Keyboard.App.log(event.code);
         
         Keyboard.keys.forEach(key => {
-            if(key.code == event.code) eval(key.event);
+            if(key.code == event.code) 
+                Keyboard.App.call(key.callback);
         });
 
         //console.log(App.UI.Panel.element);

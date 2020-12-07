@@ -11,7 +11,7 @@ export function rgb( red, green = -1, blue = -1 ) {
 	return new THREE.Color( blue | ( green << 8 ) | ( red << 16 ));
 }
 
-export function mat( type = 'basic', color = 'white', skinning = true ) {
+export function mat( color = 'white', type = 'basic', skinning = true ) {
 	
 	if(type == 'basic')
 		return new THREE.MeshBasicMaterial(

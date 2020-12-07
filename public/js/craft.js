@@ -1,15 +1,14 @@
 import * as THREE from "./three.module.js"
-import Material from "./material.js";
-import Vector from "./vector.js";
-import { Cincture, CincturesObject } from "./cincture.js";
+import { mat } from "./material_v2.js";
 import { Cincture_V2, default_cincture_data } from "./cincture_v2.js";
-import { rndf } from "./tools.js";
+//import { rndf } from "./rnd.js";
 
 class Craft {
 
 	static helper(width=0.5, height=0.5, length=0.5, color=0xff0000) {
-		let material = Material.create("wire", color, false);
-		return Craft.box(width, height, length, Vector.zero, Vector.zero, material, false);
+		let material = mat(color, 'wire', false);
+		let v = new THREE.Vector3(0, 0, 0);
+		return Craft.box(width, height, length, v, v, material, false);
 	}
 
 	static box(width, height, length, position, rotation, material, shadow) {
@@ -32,43 +31,43 @@ class Craft {
 		return mesh;
 	}
 
-	static cincture_v1(d, scene, material, smooth = 0, shadow = false) {
+	// static cincture_v1(d, scene, material, smooth = 0, shadow = false) {
 
-		let cinctures_cnt = 10 * d;
-		let spokes_cnt = 10 * d;
-		let cinctures = [];
+	// 	let cinctures_cnt = 10 * d;
+	// 	let spokes_cnt = 10 * d;
+	// 	let cinctures = [];
 
-		let cinctures_base = 0.2 / d;
-		let cinctures_deviation = 0.0;	
-		let spokes_base = 0.5;
-		let spokes_deviation = 0.0;
+	// 	let cinctures_base = 0.2 / d;
+	// 	let cinctures_deviation = 0.0;	
+	// 	let spokes_base = 0.5;
+	// 	let spokes_deviation = 0.0;
 
-		for (let c=0; c < cinctures_cnt; c++) {
-			let spokes = [];
-			let k = Math.sin(Math.PI * c / (cinctures_cnt - 1));
+	// 	for (let c=0; c < cinctures_cnt; c++) {
+	// 		let spokes = [];
+	// 		let k = Math.sin(Math.PI * c / (cinctures_cnt - 1));
 
-			for (let s=0; s < spokes_cnt; s++) {
-				let spoke = spokes_base + rndf(0, spokes_deviation);
-				spoke *= k;
-				spokes.push(spoke);
-			}
+	// 		for (let s=0; s < spokes_cnt; s++) {
+	// 			let spoke = spokes_base + rndf(0, spokes_deviation);
+	// 			spoke *= k;
+	// 			spokes.push(spoke);
+	// 		}
 			
-			let offset_y = cinctures_base + rndf(0, cinctures_deviation);
-			if (c < 1 ) offset_y = 0.0;
-			offset_y *=  k;
+	// 		let offset_y = cinctures_base + rndf(0, cinctures_deviation);
+	// 		if (c < 1 ) offset_y = 0.0;
+	// 		offset_y *=  k;
 
-			let rotation_x = 0.0;//0.5 * k / d; //(rndf(0.2, 0.5) * k) / d;
-			cinctures.push(
-				new Cincture(spokes, [0.0, offset_y, 0.0], [rotation_x, 0.0, 0.0])
-			);
-		}
+	// 		let rotation_x = 0.0;//0.5 * k / d; //(rndf(0.2, 0.5) * k) / d;
+	// 		cinctures.push(
+	// 			new Cincture(spokes, [0.0, offset_y, 0.0], [rotation_x, 0.0, 0.0])
+	// 		);
+	// 	}
 		
-		//console.log(cinctures);
+	// 	//console.log(cinctures);
 
-		return new CincturesObject(scene, material, cinctures, true, true, smooth, shadow);
-	}
+	// 	return new CincturesObject(scene, material, cinctures, true, true, smooth, shadow);
+	// }
 
-	static cincture_v21(d = 1, material) { 
+	static cincture_generator_01_old(d = 1, material) { 
 		
 		let data = Object.assign( {}, default_cincture_data );
 		
@@ -121,10 +120,11 @@ class Craft {
         return new Cincture_V2(data);	
 	}
 
-	static cincture_v2(material) {
+	static cincture_generator_01(color=0xffffff, type='standard') {
+		
 		let cinc = new Cincture_V2();
 			cinc.clear();
-			cinc.data.material = material;
+			cinc.data.material =  mat(color, type);
 			// cinc.data.subcincs = 4;
 			// cinc.data.subnodes = 4;
 			// cinc.data.helpers = 0.01;

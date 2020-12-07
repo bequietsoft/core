@@ -1,11 +1,11 @@
-import * as THREE from "./three.module.js"
+// import * as THREE from "./three.module.js"
 
 class Mouse {
 	
-	static init(root) {
+	static init(App) {
 		
-		Mouse.root = root;
-		root.Mouse = Mouse;
+		Mouse.App = App;
+		App.Mouse = Mouse;
 
 		// item format: [pos0, ... , pos_length] [x, y, time]
 		Mouse.path = [];		
@@ -13,7 +13,7 @@ class Mouse {
 
 		// item format: [x, y, time]
 		Mouse.pos = []; 		
-		Mouse.coords = new THREE.Vector2( -1.1, -1.1 );
+		Mouse.coords = { x: -1.1, y: -1.1 };
 		
 		Mouse.dx = 0;
 		Mouse.dy = 0;
@@ -36,17 +36,17 @@ class Mouse {
 	}
 	
 	static update() {
-		if(Math.abs(Mouse.mdx) > 1) Mouse.mdx /= 2; else Mouse.mdx = 0;
-		if(Math.abs(Mouse.mdy) > 1) Mouse.mdy /= 2; else Mouse.mdy = 0;
-		if(Math.abs(Mouse.wheel) > 0.5) Mouse.wheel /= 1.1; else Mouse.wheel = 0;
+		if (Math.abs(Mouse.mdx) > 1) Mouse.mdx /= 2; else Mouse.mdx = 0;
+		if (Math.abs(Mouse.mdy) > 1) Mouse.mdy /= 2; else Mouse.mdy = 0;
+		if (Math.abs(Mouse.wheel) > 0.5) Mouse.wheel /= 1.1; else Mouse.wheel = 0;
 	}
 
 	static onmove( event ) {
 		
-		Mouse.coords.set( 
-			+(event.clientX / window.innerWidth) * 2 - 1, 
-			-(event.clientY / window.innerHeight) * 2 + 1
-		);
+		Mouse.coords = {
+			x: +(event.clientX / window.innerWidth) * 2 - 1, 
+			y: -(event.clientY / window.innerHeight) * 2 + 1
+		};
 
 		Mouse.pos = [event.clientX, event.clientY, Date.now()];
 		Mouse.path.push(Mouse.pos);
