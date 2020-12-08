@@ -13,6 +13,8 @@ export function rgb( red, green = -1, blue = -1 ) {
 
 export function mat( color = 'white', type = 'basic', skinning = true ) {
 	
+	//console.log(color);
+
 	if(type == 'basic')
 		return new THREE.MeshBasicMaterial(
 		{ 

@@ -1,5 +1,6 @@
 import * as THREE from "./three.module.js"
-import { rndf } from "./rnd.js"; //let rndf1 = rndf;
+import * as V from "./vectors.js";
+// import { rndf } from "./rnd.js"; //let rndf1 = rndf;
 import Renderer from "./renderer.js";
 import World from "./world.js";
 import Mouse from "./mouse.js";
@@ -12,9 +13,10 @@ class App {
 	
 	static init() {
         
-		// variables
+		// global app variables
 		{	
 			App.THREE = THREE;
+			App.V = V;
 
 			// App.evals = [];
 
@@ -41,7 +43,7 @@ class App {
 		Renderer.init(this);
 		World.init(this);
 		
-		App.input_init(this);
+		App.input_inits(this);
 
         App.onresize();
 		App.update();
@@ -100,22 +102,45 @@ class App {
 		}
 	}
 
-	static input_init(App){
+	static input_inits(App){
 		if (App.mobile) {
 			TouchScreen.init(App);
-			// TouchScreen.events.push({ 
-			// 	type: 'touchstart', callback: 'this.log(this.Gyro.sensor);', context: this
-			// });
-			//App.Gyro = Gyro;//
 			Gyro.init(App);
 		} else {
 			Mouse.init(App);
 			Keyboard.init(App);
 			
+			// user inputs
 			Keyboard.keys.push({ code: 'Backquote', callback: 'App.VR = !App.VR;' });
 			Keyboard.keys.push({ code: 'Digit2', callback: 'console.log(App.World.camera);' });
+
+			Keyboard.keys.push({ code: 'KeyW', callback: 'App.move(+0.1, 0, 0)' });
+			Keyboard.keys.push({ code: 'KeyS', callback: 'App.move(-0.1, 0, 0)' });
 		}
 	}
+
+	static move(x, y, z) {
+		// let dx = App.World.camera.root.position.x - App.World.camera.position.x;
+		// let dz = App.World.camera.root.position.z - App.World.camera.position.z;
+		// let mv = App.V.NV(App.V.V(dx, 0, dz));
+		// console.log(mv);
+		// App.World.camera.root.position.x += mv.x;
+		// App.World.camera.root.position.z += mv.z;
+
+		let mv = App.V.V(x, y, z);
+		console.log(mv);
+
+		let ra = App.World.camera.root.rotation.y * 180 / Math.PI;
+		console.log(ra);
+		
+		let rv = App.V.V(0, ra, 0);
+		mv = App.V.RV(mv, rv);
+		console.log(mv);
+
+		// let np = App.V.AV(App.World.camera.root.position, mv);
+		// App.World.camera.root.position.set(np.x, np.y, np.z);
+	}
+	
 
 	static log(msg) {
 	
@@ -189,5 +214,6 @@ export default App;
 
 window.addEventListener("resize", App.onresize);
 window.addEventListener("load", App.onload);
+
 document.addEventListener('contextmenu', event => event.preventDefault());
 

@@ -1,25 +1,6 @@
 import * as THREE from "./three.module.js";
-import { mat, rgb } from "./material_v2.js";
+import { mat, rgb } from "./material.js";
 import { V, GV, DP, DV, MV, RV, LV, V0 } from "./vectors.js";
-
-// function sphere(radius, position, rotation, material, shadow = false, devisions = 2) {
-// 	var geometry = new THREE.SphereBufferGeometry(radius, devisions, devisions);
-// 	var mesh = new THREE.Mesh(geometry, material);
-// 	mesh.position.set(position.x, position.y, position.z);
-// 	mesh.rotation.set(rotation.x, rotation.y, rotation.z);
-// 	mesh.castShadow = shadow;
-// 	mesh.reciveShadow = shadow;
-// 	return mesh;
-// }
-
-// function marker( position, color, size, div, visible ) {
-// 	let material = mat(color, 'basic');
-// 	let marker = sphere( size, position, V0, material, false, div );
-// 		marker.renderOrder = 999;
-// 		marker.visible = visible;
-// 		marker.onBeforeRender = function( renderer ) { renderer.clearDepth(); };
-// 	return marker;
-// }
 
 export var default_cincture_data = {
 	
@@ -67,7 +48,7 @@ export var default_cincture_data = {
 	uv: { x: 0, y: 0, width: 1, height: 1 }
 };
 
-export class Cincture_V2 {
+export class Cincture {
 
 	constructor(data = default_cincture_data) {
 		this.data = data;
@@ -75,7 +56,7 @@ export class Cincture_V2 {
 		this.geometry.faceVertexUvs[0] = [];
 	}
 	
-	update() {
+	build() {
 		this.check_data();
 		this.calc_counters();
 		this.sub_divisions();
@@ -96,7 +77,7 @@ export class Cincture_V2 {
 	check_data() {
 		this.data.smooth.normals = this.clamp( this.data.smooth.normals, 0, 1 );
 		this.data.smooth.vertices = this.clamp( this.data.smooth.vertices, 0, 1 );
-		if ( this.data.angles != undefined && this.data.nodes.length != this.data.angles.length ) 
+		if (this.data.angles != undefined && this.data.nodes.length != this.data.angles.length) 
 			log( 'Wrong parameters: nodes and angles array must be some length.' );
 	}
 
@@ -838,7 +819,7 @@ export class Cincture_V2 {
 	}
 
 	// convert degrees to radians
-	d2r( deg ) {
+	d2r(deg) {
 		return deg * Math.PI / 180;
 	}
 

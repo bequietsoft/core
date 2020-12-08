@@ -4,12 +4,32 @@ class Gyro {
 		
 		Gyro.App = App;
 		App.Gyro = Gyro;
-
-		Gyro.sensor = new Gyroscope();
 		
-		Gyro.sensor.start();
-		Gyro.changed = false;
-		// console.log(Gyro.sensor);
+		window.addEventListener("deviceorientation", Gyro.orientation, true);
+		//console.log(window);
+	}
+
+	static orientation(event) {
+		console.log(event.beta * Math.PI / 180);
+		//Gyro.App.World.camera.root.rotation.y = event.gamma * Math.PI / 180;
+
+		Gyro.App.World.camera.rotation.y = event.alpha * Math.PI / 180;
+		//Gyro.App.World.camera.rotation.y = 90 -event.beta * Math.PI / 180;
+		Gyro.App.World.camera.rotation.z = -event.gamma * Math.PI / 180;
+		//Gyro.App.World.camera.target.rotation.z -= Mouse.dy/300;
+	}
+
+	static initSensor() {
+		const options = { frequency: 60, coordinateSystem };
+		console.log(JSON.stringify(options));
+		sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options);
+		sensor.onreading = () => model.quaternion.fromArray(sensor.quaternion).inverse();
+		sensor.onerror = (event) => {
+		  if (event.error.name == 'NotReadableError') {
+			console.log("Sensor is not available.");
+		  }
+		}
+		sensor.start();
 	}
 
 	static update() {

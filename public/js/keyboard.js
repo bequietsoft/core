@@ -11,14 +11,12 @@ class Keyboard {
 
     static onkeydown(event) {
         
-        if(Keyboard.App.debug) Keyboard.App.log(event.code);
+        if (Keyboard.App.debug) Keyboard.App.log(event.code);
         
         Keyboard.keys.forEach(key => {
-            if(key.code == event.code) 
+            if (key.code == event.code) 
                 Keyboard.App.call(key.callback);
         });
-
-        //console.log(App.UI.Panel.element);
     }
 }
 

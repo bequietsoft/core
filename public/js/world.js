@@ -5,6 +5,7 @@
 // import { mat, tmat } from "./material_v2.js";
 // import Vector from "./vector-old.js";
 import Craft from "./craft.js";
+import { Material } from "./three.module.js";
 
 class World {
 
@@ -41,14 +42,20 @@ class World {
 			World.ground.receiveShadow = true;
 				
 		World.camera = new THREE.PerspectiveCamera();
+		World.cameraDirLight = new THREE.DirectionalLight( 0xffffaa, 0.1 );
 			World.camera.root = new THREE.Object3D();
 			World.camera.target = new THREE.Object3D();
 			World.camera.root.add(World.camera.target);
 			World.camera.target.add(World.camera);
+			World.camera.add(World.cameraDirLight);
+
+		
+		World.cameraDirLight.target = World.camera.target;
+
 			World.camera.position.x -= 3;
-			World.camera.root.rotateY(Math.PI/8);
+			//World.camera.root.rotateY(Math.PI/8);
 			
-			//App.camera.root.rotateY(-Math.PI/4);
+			//World.camera.root.rotateY(-Math.PI/4);
 			World.camera.target.rotateZ(-Math.PI/8); 
 			World.camera.lookAt(World.camera.root.position);
 
@@ -60,12 +67,16 @@ class World {
 
 		//World.camera.root.position.y += 0.5;
 
-		//World.add_helpers();
-		World.demo_start();
+		World.add_helpers();
+		World.demo_scene_00();
 	}
 
-	static demo_start() {
-		World.demo_scene_01();
+	static demo_scene_00() {
+		let box = Craft.box(
+			{width: 0.1, height: 0.1, length:0.1 }
+		);
+		box.position.y = 0.5;
+		World.scene.add(box);
 	}
 
 	static demo_scene_01() {
@@ -82,9 +93,13 @@ class World {
 	}
 
 	static add_helpers() {
-		World.root.add(Craft.helper(0.2, 0.2, 0.2, "red"));
-		World.camera.root.add(Craft.helper(0.3, 0.3, 0.3, "green"));
-		World.camera.target.add(Craft.helper(0.5, 0.5, 0.5, "blue"));
+		//World.root.add(Craft.helper(0.02, 0.02, 0.02, "red"));
+		World.camera.root.add(
+			Craft.helper(
+				{ width: 0.1, height: 0.1, length:0.1 },
+				0xff0000 
+			));
+		//World.camera.target.add(Craft.helper(0.05, 0.05, 0.05, "blue"));
 	}
 
 }
