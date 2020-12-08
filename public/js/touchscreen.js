@@ -5,7 +5,9 @@ class TouchScreen {
 		TouchScreen.App = App;
 		App.TouchScreen = TouchScreen;
 
-		TouchScreen.pos = [];
+		TouchScreen.d = { x:0, y:0 };
+		TouchScreen.last_pos = { x:-200, y:-200 };
+		TouchScreen.curent_pos = { x:-200, y:-200 };
 		TouchScreen.events = [];
 
 		document.addEventListener("touchcancel", TouchScreen.oncancel.bind(this));
@@ -26,18 +28,26 @@ class TouchScreen {
 	}
 
 	static onstart(event) {
-		console.log(event);
+		//console.log(event);
+		TouchScreen.touch = true;
 		//console.log(this);
 	}
 
 	static onend(event) {
 		//console.log(event);
+		TouchScreen.touch = false;
 		//TouchScreen.process(event.type);
 	}
 
 	static onmove(event) {
-		//log(event);
-		//TouchScreen.process(event.type);
+		
+		let t = event.touches[0];
+
+		TouchScreen.App.log(t.clientX + ' : ' + t.clientY);
+		TouchScreen.curent_pos.x = t.clientX;
+		TouchScreen.curent_pos.y = t.clientY;
+
+		//if ()
 	}
 
 	// static eval_in_context(callback, context) {

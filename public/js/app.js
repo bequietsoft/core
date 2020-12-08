@@ -57,16 +57,17 @@ class App {
 	static onload() {
 		
 		App.log(document.URL);
-		App.log(navigator);
+		App.log(navigator.userAgent);
 
 		if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
 			App.mobile = true;
+			//App.log('Mobile: ' + App.mobile);
 			if (navigator.platform === 'Win32') {
 				App.log("Mobile platform (emulation)");
 				App.ondeviceready();
 			} else {
-				log("Mobile platform");
-				document.addEventListener("deviceready", App.ondeviceready, false);
+				App.log("Mobile platform");
+				App.ondeviceready();//document.addEventListener("deviceready", App.ondeviceready, false);
 			}
 		} else {
 			App.mobile = false;
@@ -170,6 +171,8 @@ class App {
 			//log.innerHTML.replace('<h1>', '').replace('</h1>', ''); 
 			//log.innerHTML = '<h1>' + msg + '</h1><br>' + log.innerHTML;
 			log_element.innerHTML = msg + '<br>' + log_element.innerHTML;
+			if (log_element.innerHTML.length > 255) 
+				log_element.innerHTML = log_element.innerHTML.substring(0, 255);
 		}
 	}
 
@@ -188,6 +191,10 @@ class App {
 
 		if (App.mobile) {
 			TouchScreen.update();
+			//console.log(TouchScreen.curent_pos);
+			//if (TouchScreen.touch) 
+			//	circle("canvas", TouchScreen.curent_pos);
+
 			Gyro.update();
 		} else {
 			Mouse.update();
@@ -212,8 +219,30 @@ class App {
 
 export default App;
 
+
 window.addEventListener("resize", App.onresize);
 window.addEventListener("load", App.onload);
 
 document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener("touchmove", event => event.preventDefault(), {passive: false});
 
+// function preventBehavior(e) {
+//     e.preventDefault(); 
+// }
+
+function circle(id, p) {
+	const canvas = document.getElementById(id);
+	const context = canvas.getContext('2d');
+	// const centerX = canvas.width / 2;
+	// const centerY = canvas.height / 2;
+	const radius = 70;
+	if (context) {
+		context.beginPath();
+		context.arc(p.x, p.y, radius, 0, 2 * Math.PI, false);
+		context.fillStyle = 'green';
+		context.fill();
+		context.lineWidth = 5;
+		context.strokeStyle = '#003300';
+		context.stroke();
+	} else console.log(canvas);
+}
