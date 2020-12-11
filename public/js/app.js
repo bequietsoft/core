@@ -64,20 +64,18 @@ class App {
 			//App.log('Mobile: ' + App.mobile);
 			if (navigator.platform === 'Win32') {
 				App.log("Mobile platform (emulation)");
-				App.ondeviceready();
+				//App.ondeviceready();
 			} else {
 				App.log("Mobile platform");
-				App.ondeviceready();//document.addEventListener("deviceready", App.ondeviceready, false);
+				//App.ondeviceready();//document.addEventListener("deviceready", App.ondeviceready, false);
 			}
 		} else {
 			App.mobile = false;
 			App.log("Browser platform");
-			App.ondeviceready();
+			//App.ondeviceready();
 		}
-    }
-    
-    static ondeviceready() {
-		App.log("Device ready");
+
+		//App.log("Device ready");
 		App.init();
     }
 
@@ -112,34 +110,22 @@ class App {
 			Keyboard.init(App);
 			
 			// user inputs
-			Keyboard.keys.push({ code: 'Backquote', callback: 'App.VR = !App.VR;' });
-			Keyboard.keys.push({ code: 'Digit2', callback: 'console.log(App.World.camera);' });
+			Keyboard.actions.push({ code: 'Backquote', callback: 'App.VR = !App.VR;' });
+			Keyboard.actions.push({ code: 'Digit2', callback: 'console.log(App.World.camera);' });
 
-			Keyboard.keys.push({ code: 'KeyW', callback: 'App.move(+0.1, 0, 0)' });
-			Keyboard.keys.push({ code: 'KeyS', callback: 'App.move(-0.1, 0, 0)' });
+			Keyboard.actions.push({ code: 'KeyW', type: 'keydown', callback: 'App.move(+0.1, 0, 0)' });
+			Keyboard.actions.push({ code: 'KeyS', type: 'keydown', callback: 'App.move(-0.1, 0, 0)' });
+			Keyboard.actions.push({ code: 'KeyD', type: 'keydown', callback: 'App.move(0, 0, +0.1)' });
+			Keyboard.actions.push({ code: 'KeyA', type: 'keydown', callback: 'App.move(0, 0, -0.1)' });
 		}
 	}
 
 	static move(x, y, z) {
-		// let dx = App.World.camera.root.position.x - App.World.camera.position.x;
-		// let dz = App.World.camera.root.position.z - App.World.camera.position.z;
-		// let mv = App.V.NV(App.V.V(dx, 0, dz));
-		// console.log(mv);
-		// App.World.camera.root.position.x += mv.x;
-		// App.World.camera.root.position.z += mv.z;
-
-		let mv = App.V.V(x, y, z);
-		console.log(mv);
-
-		let ra = App.World.camera.root.rotation.y * 180 / Math.PI;
-		console.log(ra);
-		
-		let rv = App.V.V(0, ra, 0);
-		mv = App.V.RV(mv, rv);
-		console.log(mv);
-
-		// let np = App.V.AV(App.World.camera.root.position, mv);
-		// App.World.camera.root.position.set(np.x, np.y, np.z);
+		let rv = App.V.V(0, App.World.camera.root.rotation.y, 0);
+		let mv = App.V.RV(App.V.V(x, y, z), rv);
+		let np = App.V.AV(App.World.camera.root.position, mv);
+		App.World.camera.root.position.set(np.x, np.y, np.z);
+		//App.World.camera.root.position.set(App.V.AV(App.World.camera.root.position, mv));
 	}
 	
 
@@ -177,8 +163,7 @@ class App {
 	}
 
 	static call_in_context(callback, context) {
-		return function() { return eval(callback); }
-		.call(context);
+		return function() { return eval(callback); }.call(context);
 	}
 
 	static call(callback) {
@@ -219,30 +204,34 @@ class App {
 
 export default App;
 
-
 window.addEventListener("resize", App.onresize);
 window.addEventListener("load", App.onload);
 
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener("touchmove", event => event.preventDefault(), {passive: false});
 
+// static ondeviceready() {
+// 	App.log("Device ready");
+// 	App.init();
+// }
+	
 // function preventBehavior(e) {
 //     e.preventDefault(); 
 // }
 
-function circle(id, p) {
-	const canvas = document.getElementById(id);
-	const context = canvas.getContext('2d');
-	// const centerX = canvas.width / 2;
-	// const centerY = canvas.height / 2;
-	const radius = 70;
-	if (context) {
-		context.beginPath();
-		context.arc(p.x, p.y, radius, 0, 2 * Math.PI, false);
-		context.fillStyle = 'green';
-		context.fill();
-		context.lineWidth = 5;
-		context.strokeStyle = '#003300';
-		context.stroke();
-	} else console.log(canvas);
-}
+// function circle(id, p) {
+// 	const canvas = document.getElementById(id);
+// 	const context = canvas.getContext('2d');
+// 	// const centerX = canvas.width / 2;
+// 	// const centerY = canvas.height / 2;
+// 	const radius = 70;
+// 	if (context) {
+// 		context.beginPath();
+// 		context.arc(p.x, p.y, radius, 0, 2 * Math.PI, false);
+// 		context.fillStyle = 'green';
+// 		context.fill();
+// 		context.lineWidth = 5;
+// 		context.strokeStyle = '#003300';
+// 		context.stroke();
+// 	} else console.log(canvas);
+// }

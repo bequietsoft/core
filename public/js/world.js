@@ -5,7 +5,7 @@
 // import { mat, tmat } from "./material_v2.js";
 // import Vector from "./vector-old.js";
 import Craft from "./craft.js";
-import { Material } from "./three.module.js";
+//import { Material } from "./three.module.js";
 
 class World {
 
@@ -94,11 +94,8 @@ class World {
 
 	static add_helpers() {
 		//World.root.add(Craft.helper(0.02, 0.02, 0.02, "red"));
-		World.camera.root.add(
-			Craft.helper(
-				{ width: 0.1, height: 0.1, length:0.1 },
-				0xff0000 
-			));
+		let h1 = Craft.helper({ width: 0.1, height: 0.1, length:0.1 }, 0xff0000);
+		World.camera.root.add(h1);
 		//World.camera.target.add(Craft.helper(0.05, 0.05, 0.05, "blue"));
 	}
 

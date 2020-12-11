@@ -20,5 +20,5 @@ db.loadDatabase();
 //let ssl = await devcert.certificateFor('core.test');
 
 //https.createServer(options, app).listen(3002);
-//http.createServer(app).listen(3000);
-http.createServer(app).listen(80, '192.168.1.69');
+http.createServer(app).listen(3000);
+//http.createServer(app).listen(80, '192.168.1.69');

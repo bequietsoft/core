@@ -5,18 +5,27 @@ class Keyboard {
         Keyboard.App = App;
 		App.Keyboard = Keyboard;
 
-        Keyboard.keys = [];
-        document.addEventListener("keydown", Keyboard.onkeydown.bind(this));
+        Keyboard.actions = [];
+        Keyboard.events = {};
+        document.addEventListener("keydown", Keyboard.callback.bind(this));
     }
 
-    static onkeydown(event) {
+    static callback(event) {
         
-        if (Keyboard.App.debug) Keyboard.App.log(event.code);
-        
-        Keyboard.keys.forEach(key => {
-            if (key.code == event.code) 
+        //if (Keyboard.App.debug) Keyboard.App.log(event);
+
+        //Keyboard.events.event.code: event };
+
+        Keyboard.actions.forEach(action => {
+            if (action.type == event.type && action.code == event.code)
                 Keyboard.App.call(key.callback);
         });
+
+        
+    }
+
+    static update() {
+        
     }
 }
 
