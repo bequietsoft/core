@@ -60,7 +60,7 @@ export default class Renderer  {
 
 		Renderer.instance.setViewport(0, 0, width/2, height);
 		Renderer.instance.setScissor(0, 0, width/2, height);
-		App.World.camera.root.rotateY(-0.1);
+		Renderer.App.World.camera.root.rotateY(-0.1);
 		Renderer.instance.render(
 			Renderer.App.World.scene, 
 			Renderer.App.World.camera
@@ -68,12 +68,12 @@ export default class Renderer  {
 
 		Renderer.instance.setViewport(width/2, 0, width/2, height);
 		Renderer.instance.setScissor(width/2, 0, width/2, height);
-		App.World.camera.root.rotateY(+0.2);
+		Renderer.App.World.camera.root.rotateY(+0.2);
 		Renderer.instance.render(
 			Renderer.App.World.scene, 
 			Renderer.App.World.camera
 		);
-		App.World.camera.root.rotateY(-0.1);
+		Renderer.App.World.camera.root.rotateY(-0.1);
 	}
 }
 

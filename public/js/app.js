@@ -1,6 +1,5 @@
 import * as THREE from "./three.module.js"
 import * as V from "./vectors.js";
-// import { rndf } from "./rnd.js"; //let rndf1 = rndf;
 import Renderer from "./renderer.js";
 import World from "./world.js";
 import Mouse from "./mouse.js";
@@ -17,8 +16,6 @@ class App {
 		{	
 			App.THREE = THREE;
 			App.V = V;
-
-			// App.evals = [];
 
 			App.debug = true;
 			App.shadows = true;
@@ -110,25 +107,29 @@ class App {
 			Keyboard.init(App);
 			
 			// user inputs
-			Keyboard.actions.push({ code: 'Backquote', callback: 'App.VR = !App.VR;' });
-			Keyboard.actions.push({ code: 'Digit2', callback: 'console.log(App.World.camera);' });
+			Keyboard.actions.push({ code: 'Backquote', type: 'keyup', callback: 'App.Renderer.VR = !App.Renderer.VR;' });
+			Keyboard.actions.push({ code: 'Digit2', type: 'keyup', callback: 'console.log(App.World.camera);' });
 
-			Keyboard.actions.push({ code: 'KeyW', type: 'keydown', callback: 'App.move(+0.1, 0, 0)' });
-			Keyboard.actions.push({ code: 'KeyS', type: 'keydown', callback: 'App.move(-0.1, 0, 0)' });
-			Keyboard.actions.push({ code: 'KeyD', type: 'keydown', callback: 'App.move(0, 0, +0.1)' });
-			Keyboard.actions.push({ code: 'KeyA', type: 'keydown', callback: 'App.move(0, 0, -0.1)' });
+			Keyboard.actions.push({ code: 'KeyW', type: 'keypressed', callback: 'App.move(+0.05, 0, 0)' });
+			Keyboard.actions.push({ code: 'KeyS', type: 'keypressed', callback: 'App.move(-0.05, 0, 0)' });
+			Keyboard.actions.push({ code: 'KeyD', type: 'keypressed', callback: 'App.turn(0, +0.05, 0)' });
+			Keyboard.actions.push({ code: 'KeyA', type: 'keypressed', callback: 'App.turn(0, -0.05, 0)' });
 		}
 	}
 
-	static move(x, y, z) {
+	static move(dx, dy, dz) {
 		let rv = App.V.V(0, App.World.camera.root.rotation.y, 0);
-		let mv = App.V.RV(App.V.V(x, y, z), rv);
+		let mv = App.V.RV(App.V.V(dx, dy, dz), rv);
 		let np = App.V.AV(App.World.camera.root.position, mv);
 		App.World.camera.root.position.set(np.x, np.y, np.z);
-		//App.World.camera.root.position.set(App.V.AV(App.World.camera.root.position, mv));
+	}
+
+	static turn(dx, dy, dz) {
+		App.World.camera.root.rotation.x -= dx;
+		App.World.camera.root.rotation.y -= dy;
+		App.World.camera.root.rotation.z -= dz;
 	}
 	
-
 	static log(msg) {
 	
 		//msg = performance.now() + "\t" + msg;
@@ -182,6 +183,7 @@ class App {
 
 			Gyro.update();
 		} else {
+			Keyboard.update();
 			Mouse.update();
 			App.World.camera.position.x += Mouse.wheel/10;
 			if(Mouse.buttons[2]) {
