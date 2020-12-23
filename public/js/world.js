@@ -4,7 +4,9 @@
 // import Material from "./material-old.js";
 // import { mat, tmat } from "./material_v2.js";
 // import Vector from "./vector-old.js";
+import { rndi, rndf } from "./rnd.js";
 import Craft from "./craft.js";
+import Person from "./person.js";
 //import { Material } from "./three.module.js";
 
 class World {
@@ -42,20 +44,20 @@ class World {
 			World.ground.receiveShadow = true;
 				
 		World.camera = new THREE.PerspectiveCamera();
-		World.cameraDirLight = new THREE.DirectionalLight( 0xffffaa, 0.1 );
 			World.camera.root = new THREE.Object3D();
 			World.camera.target = new THREE.Object3D();
 			World.camera.root.add(World.camera.target);
 			World.camera.target.add(World.camera);
-			World.camera.add(World.cameraDirLight);
-
 		
+		World.cameraDirLight = new THREE.DirectionalLight( 0xffffaa, 0.1 );
+		World.camera.add(World.cameraDirLight);		
 		World.cameraDirLight.target = World.camera.target;
 
 			World.camera.position.x -= 3;
 			//World.camera.root.rotateY(Math.PI/8);
 			
 			//World.camera.root.rotateY(-Math.PI/4);
+			World.camera.target.rotateY(-Math.PI/2); 
 			World.camera.target.rotateZ(-Math.PI/8); 
 			World.camera.lookAt(World.camera.root.position);
 
@@ -65,10 +67,14 @@ class World {
 		World.scene.add(World.root);
 		World.scene.add(World.camera.root);
 
+		World.avatar = new Person(World.camera.root);
+		World.avatar.set_pose_01();
+		
 		//World.camera.root.position.y += 0.5;
 
-		World.add_helpers();
-		World.demo_scene_00();
+		//World.add_helpers();
+		//World.demo_scene_00();
+		World.rnd_scene_01();
 	}
 
 	static demo_scene_00() {
@@ -90,6 +96,20 @@ class World {
 		// cinc.mesh.position.x += 0.5;
 		// cinc.mesh.position.y += 0.5;
 		// cinc.mesh.rotation.z += Math.PI/2;
+	}
+
+	static rnd_scene_01() {
+
+		for(let i=0; i<100; i++) {
+			let type = rndi(0, 1);
+			if (type == 0) {
+				let height = rndf(0.1, 1.0);
+				let obj = Craft.box(
+					{width: rndf(0.1, 1.0), height: height, length: rndf(0.1, 1.0)},
+					{x: rndf(-20, +20), y: height/2, z: rndf(-20, +20)});
+				World.scene.add(obj);
+			}
+		}
 	}
 
 	static add_helpers() {

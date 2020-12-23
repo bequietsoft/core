@@ -110,8 +110,8 @@ class App {
 			Keyboard.actions.push({ code: 'Backquote', type: 'keyup', callback: 'App.Renderer.VR = !App.Renderer.VR;' });
 			Keyboard.actions.push({ code: 'Digit2', type: 'keyup', callback: 'console.log(App.World.camera);' });
 
-			Keyboard.actions.push({ code: 'KeyW', type: 'keypressed', callback: 'App.move(+0.05, 0, 0)' });
-			Keyboard.actions.push({ code: 'KeyS', type: 'keypressed', callback: 'App.move(-0.05, 0, 0)' });
+			Keyboard.actions.push({ code: 'KeyW', type: 'keypressed', callback: 'App.move(0, 0, +0.05)' });
+			Keyboard.actions.push({ code: 'KeyS', type: 'keypressed', callback: 'App.move(0, 0, -0.05)' });
 			Keyboard.actions.push({ code: 'KeyD', type: 'keypressed', callback: 'App.turn(0, +0.05, 0)' });
 			Keyboard.actions.push({ code: 'KeyA', type: 'keypressed', callback: 'App.turn(0, -0.05, 0)' });
 		}
