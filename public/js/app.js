@@ -173,6 +173,7 @@ class App {
 
     static update() {
 		
+		
 		requestAnimationFrame(App.update);
 
 		if (App.mobile) {

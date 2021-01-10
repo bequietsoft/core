@@ -135,31 +135,62 @@ class Craft {
     //     return new Cincture_V2(data);	
 	// }
 
-	static cincture_generator_01(material=default_material) {
+	static cincture_generator_01(width = 0.5, height = 0.5, length=0.5, material=default_material) {
 		
 		let cinc = new Cincture();
 			
 			cinc.clear();
 
 			cinc.data.material =  default_material;
-			// cinc.data.subcincs = 4;
-			// cinc.data.subnodes = 4;
-			// cinc.data.helpers = 0.01;
+			cinc.data.material.wireframe = true;
+			cinc.data.shadows = { cast: false, recive: false };
+
+				// cinc.data.subcincs = 4;
+				// cinc.data.subnodes = 4;
+			//cinc.data.smooth.normals = 1;
+				//cinc.data.helpers = 0.01;
 
 			let cinctures_cnt = 2;
-			let spokes_cnt = 4;
-			let spoke_base = 0.35;
+			let spokes_cnt = 8;
+			let spoke_base = 0.0;
+			let cincture_step = height / (cinctures_cnt - 1);
 			
+
+			let r = height / 2;
+
+			console.log('width=' + width + ' height=' + height + ' length=' + length);
+
 			for (let c=0; c < cinctures_cnt; c++) {
 				
-				for (let s=0; s < spokes_cnt; s++) cinc.data.nodes.push(spoke_base);
+				let x = Math.abs(r - c * cincture_step);
+				let spoke = spoke_base + 2 * width * Math.sqrt( r * r - x * x );
+				
+				let da = (2 * Math.PI) / (spokes_cnt);
+				console.log('da = ' + da);
 
-				//spoke_base += 0.1;
+				//console.log(spoke);
+				for (let s=0; s < spokes_cnt; s++) {
+					
+					
+					let x0 = (width/2) *  Math.cos( s * da );
+					let y0 = (length/2) * Math.sin( s * da );
+					spoke = Math.sqrt( x0 * x0 + y0 * y0 );
+					//spoke = ( x0 * x0 + y0 * y0 );
+					
+					console.log(s + ' a=' + s*da + 
+					' x=' + Math.cos( s * da ) + 
+					' y=' + Math.sin( s * da ) +
+					' x0=' + x0 + ' y0=' + y0 +
+					' x0*x0 + y0*y0=' + (x0 * x0 + y0 * y0) +
+					' spoke= ' + spoke);
 
+					cinc.data.nodes.push(spoke);
+				}
+				
 				if (c===0) 
 					cinc.data.offsets.push(0.0, 0.0, 0.0);
 				else 
-					cinc.data.offsets.push(0.0, 0.5, 0.0);
+					cinc.data.offsets.push(0.0, cincture_step, 0.0);
 				
 				cinc.data.rotates.push(0.0, 0.0, 0.0);
 			}

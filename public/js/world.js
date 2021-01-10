@@ -2,7 +2,7 @@
 // import App from "./app.js";
 
 // import Material from "./material-old.js";
-// import { mat, tmat } from "./material_v2.js";
+import { mat } from "./material.js";
 // import Vector from "./vector-old.js";
 import { rndi, rndf } from "./rnd.js";
 import Craft from "./craft.js";
@@ -74,24 +74,33 @@ class World {
 
 		//World.add_helpers();
 		//World.demo_scene_00();
-		World.rnd_scene_01();
+		World.demo_scene_01();
+		//World.rnd_scene_01();
 	}
 
 	static demo_scene_00() {
+	
 		let box = Craft.box(
-			{width: 0.1, height: 0.1, length:0.1 }
+			{width: 0.5, height: 0.5, length: 0.5 }
 		);
-		box.position.y = 0.5;
+		box.material =  mat(0xffffff, 'wire');
+		box.castShadow = false;
+		box.receiveShadow = false;
+		box.position.y = 0.25;
 		World.scene.add(box);
 	}
 
 	static demo_scene_01() {
 		
-		let cinc1 = Craft.cincture_generator_01();
-		let cinc2 = Craft.cincture_generator_01({ type: 'wire'});
+		let cinc1 = Craft.cincture_generator_01(0.45, 0.5, 0.5);
+		let cinc2 = Craft.cincture_generator_01(0.25, 0.5, 0.5);
+		let cinc3 = Craft.cincture_generator_01(0.01, 0.5, 0.5);
+		//let cinc2 = Craft.cincture_generator_01({ type: 'wire'});
 		
 		World.scene.add(cinc1.mesh);
 		World.scene.add(cinc2.mesh);
+		World.scene.add(cinc3.mesh);
+		//World.scene.add(cinc2.mesh);
 		
 		// cinc.mesh.position.x += 0.5;
 		// cinc.mesh.position.y += 0.5;
