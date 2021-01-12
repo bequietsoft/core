@@ -92,15 +92,13 @@ class World {
 
 	static demo_scene_01() {
 		
-		let cinc1 = Craft.cincture_generator_01(0.45, 0.5, 0.5);
-		let cinc2 = Craft.cincture_generator_01(0.25, 0.5, 0.5);
-		let cinc3 = Craft.cincture_generator_01(0.01, 0.5, 0.5);
-		//let cinc2 = Craft.cincture_generator_01({ type: 'wire'});
+		let cinc1 = Craft.cincture_generator_01( {width: 0.45, height: 0.5, length: 0.5 } );
+		let cinc2 = Craft.cincture_generator_01( {width: 0.25, height: 0.5, length: 0.5 } );
+		let cinc3 = Craft.cincture_generator_01( {width: 0.01, height: 0.5, length: 0.5 } );
 		
 		World.scene.add(cinc1.mesh);
 		World.scene.add(cinc2.mesh);
 		World.scene.add(cinc3.mesh);
-		//World.scene.add(cinc2.mesh);
 		
 		// cinc.mesh.position.x += 0.5;
 		// cinc.mesh.position.y += 0.5;
@@ -116,6 +114,8 @@ class World {
 				let obj = Craft.box(
 					{width: rndf(0.1, 1.0), height: height, length: rndf(0.1, 1.0)},
 					{x: rndf(-20, +20), y: height/2, z: rndf(-20, +20)});
+				mesh.position.set(position.x, position.y, position.z);
+				mesh.rotation.set(rotation.x, rotation.y, rotation.z);
 				World.scene.add(obj);
 			}
 		}

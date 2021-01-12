@@ -5,44 +5,52 @@ import { Cincture, default_cincture_data } from "./cincture.js";
 
 const default_material = mat(0xffffff, 'standard');
 const default_size = {width: 0.5, height: 0.5, length: 0.5};
-const v = {x: 0, y: 0, z: 0};
+// const v = {x: 0, y: 0, z: 0};
 
 class Craft {
 
 	static helper(size=default_size, color=0xff0000) {
-		console.log(size);
-		console.log(color);
+		// console.log(size);
+		// console.log(color);
 		let material = mat(color, 'wire', false);
-		let v = new THREE.Vector3(0, 0, 0);
-		return Craft.box(size, v, v, material, false);
+		let helper = Craft.box(size, material);
+			helper.castShadow = false;
+			helper.reciveShadow = false;
+		// let v = new THREE.Vector3(0, 0, 0);
+		return helper;
 	}
 
 	static box(
 		size=default_size, 
-		position=v, rotation=v, 
-		material=default_material, 
-		shadow=true) {
+		material=default_material
+		// position=v, rotation=v, 
+		// material=default_material, 
+		// shadow=true
+		) {
 			//console.log(material);
 		var geometry = new THREE.BoxGeometry(size.width, size.height, size.length);
 		var mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(position.x, position.y, position.z);
-			mesh.rotation.set(rotation.x, rotation.y, rotation.z);
-			mesh.castShadow = shadow;
-			mesh.reciveShadow = shadow;
+			// mesh.position.set(position.x, position.y, position.z);
+			// mesh.rotation.set(rotation.x, rotation.y, rotation.z);
+			// mesh.castShadow = shadow;
+			// mesh.reciveShadow = shadow;
 		return mesh;
 	}
 
 	static sphere(
-		radius, devisions=8,
-		position=v, rotation=v,
-		material=default_material, 
-		shadow=true) {
+		radius=1,
+		devisions=8,
+		material=default_material
+		// position=v, rotation=v,
+		// material=default_material, 
+		// shadow=true
+		) {
 		var geometry = new THREE.SphereBufferGeometry(radius, devisions, devisions);
 		var mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(position.x, position.y, position.z);
-			mesh.rotation.set(rotation.x, rotation.y, rotation.z);
-			mesh.castShadow = shadow;
-			mesh.reciveShadow = shadow;
+			// mesh.position.set(position.x, position.y, position.z);
+			// mesh.rotation.set(rotation.x, rotation.y, rotation.z);
+			// mesh.castShadow = shadow;
+			// mesh.reciveShadow = shadow;
 		return mesh;
 	}
 
@@ -135,15 +143,19 @@ class Craft {
     //     return new Cincture_V2(data);	
 	// }
 
-	static cincture_generator_01(width = 0.5, height = 0.5, length=0.5, material=default_material) {
+	static cincture_generator_01(
+		//width = 0.5, height = 0.5, length=0.5, 
+		size=default_size,
+		material=default_material
+		) {
 		
-		let cinc = new Cincture();
-			
-			cinc.clear();
+			console.log('width=' + size.width + ' height=' + size.height + ' length=' + size.length);
 
-			cinc.data.material =  default_material;
-			cinc.data.material.wireframe = true;
-			cinc.data.shadows = { cast: false, recive: false };
+			let cinc = new Cincture();
+				cinc.clear();
+				cinc.data.material =  default_material;
+				cinc.data.material.wireframe = true;
+				cinc.data.shadows = { cast: false, recive: false };
 
 				// cinc.data.subcincs = 4;
 				// cinc.data.subnodes = 4;
@@ -156,14 +168,12 @@ class Craft {
 			let cincture_step = height / (cinctures_cnt - 1);
 			
 
-			let r = height / 2;
-
-			console.log('width=' + width + ' height=' + height + ' length=' + length);
+			let r = size.height / 2;
 
 			for (let c=0; c < cinctures_cnt; c++) {
 				
 				let x = Math.abs(r - c * cincture_step);
-				let spoke = spoke_base + 2 * width * Math.sqrt( r * r - x * x );
+				let spoke = spoke_base + 2 * size.width * Math.sqrt( r * r - x * x );
 				
 				let da = (2 * Math.PI) / (spokes_cnt);
 				console.log('da = ' + da);
@@ -172,8 +182,8 @@ class Craft {
 				for (let s=0; s < spokes_cnt; s++) {
 					
 					
-					let x0 = (width/2) *  Math.cos( s * da );
-					let y0 = (length/2) * Math.sin( s * da );
+					let x0 = (size.width/2) *  Math.cos( s * da );
+					let y0 = (size.length/2) * Math.sin( s * da );
 					spoke = Math.sqrt( x0 * x0 + y0 * y0 );
 					//spoke = ( x0 * x0 + y0 * y0 );
 					
@@ -195,6 +205,7 @@ class Craft {
 				cinc.data.rotates.push(0.0, 0.0, 0.0);
 			}
 
+			console.log(cinc);
 			cinc.build();
 
 		return cinc;
