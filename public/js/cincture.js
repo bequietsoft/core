@@ -261,7 +261,7 @@ export class Cincture {
 		if ( this.data.angles == undefined ) return this.delta_angle;
 
 		if ( !this.data.reverse_nodes ) {
-			return d2r( this.data.angles [ i ] );
+			return this.d2r( this.data.angles [ i ] );
 		}
 
 		let ci = Math.floor( i / this.nodes_count );
@@ -270,7 +270,7 @@ export class Cincture {
 		let ri = ci * this.nodes_count + ( this.nodes_count - 1 - ni );
 		//log( '4 ' + ci + ':' + ni + ' >> ri=' + ri);
 
-		return d2r( this.data.angles [ ri ] );
+		return this.d2r( this.data.angles [ ri ] );
 	}
 
 	check_clamp_cinc ( ci ) {

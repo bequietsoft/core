@@ -156,6 +156,8 @@ class Craft {
 				cinc.data.material =  default_material;
 				cinc.data.material.wireframe = true;
 				cinc.data.shadows = { cast: false, recive: false };
+				
+				cinc.data.angles = [];
 
 				// cinc.data.subcincs = 4;
 				// cinc.data.subnodes = 4;
@@ -163,9 +165,9 @@ class Craft {
 				//cinc.data.helpers = 0.01;
 
 			let cinctures_cnt = 2;
-			let spokes_cnt = 8;
+			let spokes_cnt = 6;
 			let spoke_base = 0.0;
-			let cincture_step = height / (cinctures_cnt - 1);
+			let cincture_step = size.height / (cinctures_cnt - 1);
 			
 
 			let r = size.height / 2;
@@ -176,25 +178,47 @@ class Craft {
 				let spoke = spoke_base + 2 * size.width * Math.sqrt( r * r - x * x );
 				
 				let da = (2 * Math.PI) / (spokes_cnt);
-				console.log('da = ' + da);
+				let k = size.width/size.height;
+
+				console.log('');
+				console.log('da = ' + da + ' k=' + k);
 
 				//console.log(spoke);
 				for (let s=0; s < spokes_cnt; s++) {
 					
-					
-					let x0 = (size.width/2) *  Math.cos( s * da );
-					let y0 = (size.length/2) * Math.sin( s * da );
+					let ta = s * da;
+					let x0 = (size.width/2) *  Math.cos( ta );
+					let y0 = (size.length/2) * Math.sin( ta );
+
+					let aa = 0;
+
+					if (ta === 0 || ta === Math.PI) {
+						console.log('first or middle');
+					} else
+						if (ta < Math.PI) {
+							let ma = Math.PI/2 - (ta % Math.PI);
+							console.log('1half ma=' + ma);
+							aa += ma * k;
+						} else {
+							let ma = Math.PI/2 - (ta % Math.PI);
+							console.log('2half ma=' + ma);
+							aa += ma * k;
+						}
+
 					spoke = Math.sqrt( x0 * x0 + y0 * y0 );
 					//spoke = ( x0 * x0 + y0 * y0 );
 					
-					console.log(s + ' a=' + s*da + 
-					' x=' + Math.cos( s * da ) + 
-					' y=' + Math.sin( s * da ) +
+					console.log(
+					s + 
+					//' a=' + s*da + 
+					' x=' + Math.cos( ta ) + 
+					' y=' + Math.sin( ta ) +
 					' x0=' + x0 + ' y0=' + y0 +
 					' x0*x0 + y0*y0=' + (x0 * x0 + y0 * y0) +
 					' spoke= ' + spoke);
 
 					cinc.data.nodes.push(spoke);
+					cinc.data.angles.push( (da + aa) * 180 / Math.PI );
 				}
 				
 				if (c===0) 
