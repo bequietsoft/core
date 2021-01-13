@@ -92,12 +92,12 @@ class World {
 
 	static demo_scene_01() {
 		
-		let cinc1 = Craft.cincture_generator_01( {width: 0.5, height: 0.5, length: 0.5 } );
-		let cinc2 = Craft.cincture_generator_01( {width: 0.25, height: 0.5, length: 0.5 } );
+		let cinc1 = Craft.cincture_generator_01( {width: 0.25, height: 0.5, length: 0.5 }, 12);
+		let cinc2 = Craft.cincture_generator_01( {width: 0.5, height: 0.5, length: 0.5 }, 4);
 		// let cinc3 = Craft.cincture_generator_01( {width: 0.01, height: 0.5, length: 0.5 } );
 		
-		//World.scene.add(cinc1.mesh);
-		World.scene.add(cinc2.mesh);
+		World.scene.add(cinc1.mesh);
+		//World.scene.add(cinc2.mesh);
 		// World.scene.add(cinc3.mesh);
 		
 		// cinc.mesh.position.x += 0.5;
