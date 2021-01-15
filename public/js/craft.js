@@ -168,9 +168,9 @@ class Craft {
 			//cinc.data.smooth.normals = 1;
 				//cinc.data.helpers = 0.01;
 
-			let cinctures_cnt = 2;
+			let cinctures_cnt = 8;
 			let spokes_cnt = details;
-			let spoke_base = 0.0;
+			let spoke_base = 0.25;
 			let cincture_step = size.height / (cinctures_cnt - 1);
 			
 			console.log(hw, hl);
@@ -178,27 +178,28 @@ class Craft {
 
 			for (let c=0; c < cinctures_cnt; c++) {
 				
-				let x = Math.abs(hh - c * cincture_step);
-				let spoke = spoke_base + 2 * size.width * Math.sqrt( hh * hh - x * x );
+				let dx = Math.abs(hh - c * cincture_step);
+				let spoke = spoke_base + 2 * size.width * Math.sqrt( hh * hh - dx * dx );
 				
-				let da = (Math.PI * 2) / spokes_cnt;
+				//let da = Math.PI * 2 / spokes_cnt;
 
 				for (let s=0; s < spokes_cnt; s++) {
 					
-					let a = s * da;
 
-					spoke = hw;
-					
-					let a0 = ((a % Math.PI) / (Math.PI * 2)) * 2 - 1;
-					let a1 = (((a + Math.PI/2) % Math.PI) / (Math.PI * 2)) * 2 - 1;
-					
-					console.log(s, a0, a1);
+					// let a = s * da;
 
-					if (hl < hw) spoke = hl + (hw - hl) * Math.pow(a0, 4); 
-					if (hw < hl) spoke = hw + (hl - hw) * Math.pow(a0, 4);
+					// spoke = hw;
 					
-					if (hl < hw) console.log(s + '\tspoke=' + hl + '+' + (hw - hl) + '*' + Math.pow(a0, 4) + '=' + spoke);
-					if (hw < hl) console.log(s + '\tspoke=' + hw + '+' + (hl - hw) + '*' + Math.pow(a0, 4) + '=' + spoke);
+					// let a0 = ((a % Math.PI) / (Math.PI * 2)) * 2 - 1;
+					// let a1 = (((a + Math.PI/2) % Math.PI) / (Math.PI * 2)) * 2 - 1;
+					
+					// console.log(s, a0, a1);
+
+					// if (hl < hw) spoke = hl + (hw - hl) * Math.pow(a0, 4); 
+					// if (hw < hl) spoke = hw + (hl - hw) * Math.pow(a0, 4);
+					
+					// if (hl < hw) console.log(s + '\tspoke=' + hl + '+' + (hw - hl) + '*' + Math.pow(a0, 4) + '=' + spoke);
+					// if (hw < hl) console.log(s + '\tspoke=' + hw + '+' + (hl - hw) + '*' + Math.pow(a0, 4) + '=' + spoke);
 					cinc.data.nodes.push(spoke);
 
 				}
