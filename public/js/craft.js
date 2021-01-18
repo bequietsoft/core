@@ -160,15 +160,9 @@ class Craft {
 			let cinc = new Cincture();
 				cinc.clear();
 				cinc.data.material =  default_material;
-				//cinc.data.shadows = { cast: false, recive: false };
-				// cinc.data.cap_curve = { begin: 1, end: 1 };
-				// cinc.data.cap = { begin: true, end: true };
 				cinc.data.smooth.normals = 1;
 
 			let cincture_step = size.height / (cinctures_cnt - 1);
-
-			// let correction_k = 0.33;
-			// let cincture_correction_step = 2 * (cincture_step - cincture_step * correction_k) / ( cinctures_cnt - 1 );
 
 			//console.log(cincture_step, cincture_correction_step,  );
 			// console.log('--------------------------------------');
@@ -196,20 +190,10 @@ class Craft {
 					cinc.data.nodes.push(spoke);
 				}
 				
-				// if (c===0) {
-				// 	cinc.data.offsets.push(0.0, 0.0, 0.0);
-				// 	cinc.data.rotates.push(0.0, 0.0, 0.0);
-				// } else {
-				// 	cinc.data.offsets.push(0.0, cincture_step, 0.0);
-				// 	cinc.data.rotates.push(0.05, 0.0, 0.0);
-				//}
-
-				cinc.data.offsets.push(0.0, cincture_step , 0.0);//+ cincture_correction_step, 0.0);
-				cinc.data.rotates.push(0.085, 0.0, 0.0);
+				cinc.data.offsets.push(0.0, cincture_step , 0.0);
+				cinc.data.rotates.push(0.30, 0.20, 0.0);
 
 				if (c === 0) cinc.data.offsets[1] = 0.0;
-				// if (c === 1) cinc.data.offsets[c * 3 + 1] *= correction_k;
-				// if (c === cinctures_cnt - 1) cinc.data.offsets[c * 3 + 1] *= correction_k;
 
 				cinc.data.rotates.push(0.0, 0.0, 0.0);
 			}

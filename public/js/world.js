@@ -53,8 +53,8 @@ class World {
 		World.camera.add(World.cameraDirLight);		
 		World.cameraDirLight.target = World.camera.target;
 
-			World.camera.position.x -= 3;
-			World.camera.position.y += 0.5;
+			World.camera.position.x -= 6;
+			World.camera.position.y += 1;
 			//World.camera.root.rotateY(Math.PI/8);
 			
 			//World.camera.root.rotateY(-Math.PI/4);
@@ -92,15 +92,19 @@ class World {
 	}
 
 	static demo_scene_01() {
-		let cinc1 = Craft.cincture_generator_01( {width: 0.5, height: 1, length: 0.3 }, 8, 8, 1, 0.10);
+		let cinc1 = Craft.cincture_generator_01( {width: 0.5, height: 4, length: 0.15 }, 64, 19, 1, 0.01);
 		//let cinc2 = Craft.cincture_generator_01( {width: 0.5, height: 1, length: 0.3 }, 13, 13, 1, 0.0);
-		
-		cinc1.mesh.position.y +=0.1;
-		//cinc2.mesh.position.y +=0.1;
-		//cinc1.mesh.rotation.x -= 0.5;
+		let cinc2 = Craft.cincture_generator_01( {width: 0.5, height: 3, length: 0.15 }, 64, 28, 1, 0.01);
 
-		console.log(cinc1);
+		cinc1.mesh.position.y +=0.01;
+		cinc1.mesh.rotation.x -= 1.5;
+
+		cinc2.mesh.position.y +=0.01;
+		cinc2.mesh.rotation.x -= 1.5;
+		cinc2.mesh.rotation.y += Math.PI/2;
+
 		World.scene.add(cinc1.mesh);
+		World.scene.add(cinc2.mesh);
 
 		// cinc2.mesh.material.wireframe = true;
 		// World.scene.add(cinc2.mesh);
