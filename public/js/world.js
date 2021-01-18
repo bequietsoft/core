@@ -54,6 +54,7 @@ class World {
 		World.cameraDirLight.target = World.camera.target;
 
 			World.camera.position.x -= 3;
+			World.camera.position.y += 0.5;
 			//World.camera.root.rotateY(Math.PI/8);
 			
 			//World.camera.root.rotateY(-Math.PI/4);
@@ -91,24 +92,21 @@ class World {
 	}
 
 	static demo_scene_01() {
+		let cinc1 = Craft.cincture_generator_01( {width: 0.5, height: 1, length: 0.3 }, 8, 8, 1, 0.10);
+		//let cinc2 = Craft.cincture_generator_01( {width: 0.5, height: 1, length: 0.3 }, 13, 13, 1, 0.0);
 		
-		let cinc1 = Craft.cincture_generator_01( {width: 0.3, height: 0.5, length: 0.5 }, 8);
-		//let cinc2 = Craft.cincture_generator_01( {width: 0.5, height: 0.5, length: 0.5 }, 4);
-		
-		// let cinc3 = Craft.cincture_generator_01( {width: 0.01, height: 0.5, length: 0.5 } );
-		
+		cinc1.mesh.position.y +=0.1;
+		//cinc2.mesh.position.y +=0.1;
+		//cinc1.mesh.rotation.x -= 0.5;
+
+		console.log(cinc1);
 		World.scene.add(cinc1.mesh);
-		//World.scene.add(cinc2.mesh);
-		
-		// World.scene.add(cinc3.mesh);
-		
-		// cinc.mesh.position.x += 0.5;
-		// cinc.mesh.position.y += 0.5;
-		// cinc.mesh.rotation.z += Math.PI/2;
+
+		// cinc2.mesh.material.wireframe = true;
+		// World.scene.add(cinc2.mesh);
 	}
 
 	static rnd_scene_01() {
-
 		for(let i=0; i<100; i++) {
 			let type = rndi(0, 1);
 			if (type == 0) {
