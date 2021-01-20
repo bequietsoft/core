@@ -702,20 +702,20 @@ export class Cincture {
 		this.geometry.skinWeights.push( new THREE.Vector4( 1, 0, 0, 0) );
 	}
 
-	smooth_vertices() {
+	// smooth_vertices() {
 
-		if ( this.data.smooth.vertices == 0 ) return; 
+	// 	if ( this.data.smooth.vertices == 0 ) return; 
 
-		//log( ' Smooth vertices:' );
-		for ( let ci = 0; ci < this.cincs_count; ci++ ) {
-			let _nodes = [];
-			for ( let ni = 0; ni < this.cincs_count; ni++ ) {
-				_nodes.push ( this.data.nodes[ ci * this.cincs_count + ni ] * this.data.scale );
-			}
-			//log( _nodes );
-		}
-		//log();
-	}
+	// 	//log( ' Smooth vertices:' );
+	// 	for ( let ci = 0; ci < this.cincs_count; ci++ ) {
+	// 		let _nodes = [];
+	// 		for ( let ni = 0; ni < this.cincs_count; ni++ ) {
+	// 			_nodes.push ( this.data.nodes[ ci * this.cincs_count + ni ] * this.data.scale );
+	// 		}
+	// 		//log( _nodes );
+	// 	}
+	// 	//log();
+	// }
 
 	normilize_geometry_verices( i, j ) {
 		
