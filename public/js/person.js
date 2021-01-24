@@ -3,7 +3,17 @@ import Craft from "./craft.js";
 class Person {
 	constructor(parent) {
 		
+		return;
 		//this.init(parent);
+		this.body = Craft.bob( 0.3, 0.6, 0.15, 16, 16, 1.0, 0.05 );
+		this.body.mesh.position.y = 0.3;
+		this.body.mesh.rotation.x -= 0.5;
+		parent.add(this.body.first_bone());
+
+		this.head = Craft.box({width: 0.1, height: 0.1, length: 0.1});
+		this.head.position.y = 0.2;
+		this.body.last_bone().add(this.head);
+
 		return;
 
 		this.body = Craft.box({width: 0.15, height: 0.2, length: 0.1});

@@ -93,22 +93,21 @@ class World {
 
 	static demo_scene_01() {
 		
-		let cinc1 = Craft.cinc_one( {width: 0.3, height: 0.6, length: 0.15 }, 16, 16, 1.0, 0.05);
-		//let cinc2 = Craft.cincture_generator_01( {width: 0.5, height: 1, length: 0.3 }, 13, 13, 1, 0.0);
-		//let cinc2 = Craft.cinc_one( {width: 0.5, height: 3, length: 0.15 }, 64, 28, 1, 0.01);
+		let angle = Math.PI/2;
 
-		cinc1.mesh.position.y +=0.1;
-		cinc1.mesh.rotation.x -= 0.5;
+		let cinc_01 = Craft.bob( 0.3, 0.8, 0.15,    angle, 0.0, 0.0,    6, 16, 0.0, 0.2,    0.1 );
+		cinc_01.mesh.position.y +=0.3;
+		//World.scene.add(cinc_01.mesh);
 
-		// cinc2.mesh.position.y +=0.01;
-		// cinc2.mesh.rotation.x -= 1.5;
-		// cinc2.mesh.rotation.y += Math.PI/2;
-
-		World.scene.add(cinc1.mesh);
-		//World.scene.add(cinc2.mesh);
-
-		// cinc2.mesh.material.wireframe = true;
-		// World.scene.add(cinc2.mesh);
+		let cinc_02 = Craft.bob( 0.3, 0.8, 0.15,    0.0, 0.0, 0.0,    6, 16, 0.0, 0.2,    0.1 );
+		cinc_02.mesh.position.y +=0.3;
+		cinc_02.mesh.position.x +=1.0;
+		console.log(cinc_02.data.skeleton.bones);
+		cinc_02.data.skeleton.bones.forEach(bone => {
+			bone.rotateX( angle / 6 );
+		});
+		cinc_02.build();
+		World.scene.add(cinc_02.mesh);
 	}
 
 	static rnd_scene_01() {

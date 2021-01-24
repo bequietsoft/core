@@ -54,58 +54,64 @@ class Craft {
 		return mesh;
 	}
 
-	static cinc_one(
-		//width = 0.5, height = 0.5, length=0.5, 
-		size=default_size,
+	static bob(
+		
+		width = 0.5, height = 0.5, length=0.5,
+		angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
 		cinctures_cnt = 8,
 		spokes_cnt = 8,
 		height_curve_k = 0.0,
 		spoke_base = 0.0,
+		smooth_normals = 1,
 		material=default_material
 
 		) {
-			let hw = size.width / 2;
-			let hh = size.height / 2;
-			let hl = size.length / 2;
+			let hw = width / 2;
+			let hh = height / 2;
+			let hl = length / 2;
 
 			let cinc = new Cincture();
 				cinc.clear();
 				cinc.data.material =  default_material;
-				cinc.data.smooth.normals = 1;
-				//cinc.data.smooth.vertices = 1; // not realized 
+				cinc.data.smooth.normals = smooth_normals;
+				//cinc.data.smooth.vertices = 1; // not realized yet
 
-			let cincture_step = size.height / ( cinctures_cnt - 1 );
-
-			//console.log(cincture_step, cincture_correction_step,  );
-			// console.log('--------------------------------------');
-			// console.log('width=' + size.width + ' height=' + size.height + ' length=' + size.length);
-			// console.log('hw='+hw, 'hh='+hh, 'hl='+hl);
-			// console.log('--------------------------------------');
+			let steps = cinctures_cnt - 1;
+			//let steps_ = cinctures_cnt + 1;
+			let dy = height  / (cinctures_cnt - 1);
+			let ax = angle_x / (cinctures_cnt - 1);
+			let ay = angle_y / (cinctures_cnt - 1);
+			let az = angle_z / (cinctures_cnt - 1);
 
 			for (let c=0; c < cinctures_cnt; c++) {
 				
-				let dx = Math.abs(hh - c * cincture_step);
-				let curve_k = height_curve_k * Math.sqrt( hh * hh - dx * dx ) / hh;
+				let offset = Math.abs( hh - c * dy );//c * steps );//
+				let curve_k = height_curve_k * Math.sqrt( hh * hh - offset * offset ) / hh;
 
 				let da = Math.PI * 2 / spokes_cnt;
 
 				let a = Math.pow(hw, 2);
 				let b = Math.pow(hl, 2);
 				
-				//console.log('cinc=' + c, a, b, curve_k, dx, hh, Math.sqrt( hh * hh - dx * dx ));
+				console.log('cinc=' + c, a, b, curve_k, hh, offset);
+
 				for (let s=0; s < spokes_cnt; s++) {
 
 					let k2 = Math.pow( Math.tan(s * da), 2 );
 					let spoke = spoke_base + Math.sqrt( (a * b * ( 1 + k2 ) ) / ( a * k2 + b ) ) * curve_k;
-					//console.log('cinc='+c, 'spoke=' + spoke);
+					//console.log('cinc=' + c, 'spoke=' + spoke);
 
 					cinc.data.nodes.push(spoke);
 				}
 				
-				cinc.data.offsets.push(0.0, cincture_step , 0.0);
-				cinc.data.rotates.push(0.10, 0.0, 0.0);
+				if (c > 0) {
+					cinc.data.offsets.push(0.0, dy, 0.0);
+					cinc.data.rotates.push(ax, ay, az);
+				} else {
+					cinc.data.offsets.push(0.0, 0.0 , 0.0);
+					cinc.data.rotates.push(0.0, 0.0 , 0.0);
+				}
 
-				if (c === 0) cinc.data.offsets[1] = 0.0;
 			}
 			
 			cinc.build();

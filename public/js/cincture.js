@@ -43,7 +43,10 @@ export var default_cincture_data = {
 	vertices_epsilon: 0.001,
 	cloth: false,
 	clamp_cinc: { begin: 0, end: 1000000 },
+	bones: [],
 	skeleton: undefined,
+	first_bone: undefined,
+	last_bone: undefined,
 
 	uv: { x: 0, y: 0, width: 1, height: 1 }
 };
@@ -582,6 +585,9 @@ export class Cincture {
 		this.mesh.add( this.data.bones[ 0 ] );
 		this.data.skeleton = new THREE.Skeleton( this.data.bones );
 		this.mesh.bind( this.data.skeleton );
+
+		this.data.first_bone = this.data.bones[ 0 ];
+		this.data.last_bone = this.data.bones[ this.data.bones.length - 1 ];
 	}
 
 	// UC
@@ -803,13 +809,13 @@ export class Cincture {
 		}
 	}
 
-	first_bone() {
-		return this.data.bones[ 0 ];
-	}
+	// first_bone() {
+	// 	return this.data.bones[ 0 ];
+	// }
 
-	last_bone() {
-		return this.data.bones[ this.data.bones.length - 1 ];
-	}
+	// last_bone() {
+	// 	return this.data.bones[ this.data.bones.length - 1 ];
+	// }
 
 	// clamp value
 	clamp( v, a, b ) {
