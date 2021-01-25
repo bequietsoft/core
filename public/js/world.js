@@ -93,11 +93,9 @@ class World {
 
 	static demo_scene_01() {
 		
-		let angle = -Math.PI/6;
 		
-		let width = 0.4;
-		let height = 0.6;
-		let length = 0.2;
+		
+		let width = 0.4, height = 0.5, length = 0.15;
 		
 		let cinctures = 16;
 		let spokes = 16;
@@ -108,25 +106,26 @@ class World {
 		
 		let smooth = 0.95;
 
-		// let cinc_01 = Craft.bob( width, height, length, angle, 0.0, 0.0, cinctures, spokes, curve_k, form_k, base, smooth );
-		// cinc_01.mesh.position.y +=0.1;
-		// cinc_01.mesh.position.x -=width/2 - base/2 * form_k;
-		// cinc_01.mesh.rotation.x -= angle/2;
-		// World.scene.add(cinc_01.mesh);
+		let angle = -Math.PI/2;
+		// let angleA = -Math.PI;
+		// let angleB = +Math.PI/4;
 
-		// men body
-		let cinc_02 = Craft.bob( width, height, length, 0.0, 0.0, 0.0, cinctures, spokes, curve_k, 0.5, base, smooth );
+		// m body
+		let cinc_02 = Craft.bob( 0.4, height, length, cinctures, spokes, 0.4, 0.5, 0.05, 0.7 );
 			cinc_02.mesh.position.y +=height;
 			cinc_02.mesh.position.x +=width/2 + base/2 * form_k;
-			Craft.bend(cinc_02, angle);
+			//Craft.bendC(cinc_02, angle, 'X', -angle/2);
+			Craft.bendS(cinc_02, -3, 1, 0.4, 'X', 0.9);
+			
 			World.scene.add(cinc_02.mesh);
 		
-		// woman body
-		let cinc_03 = Craft.bob( width, height, length, 0.0, 0.0, 0.0, cinctures, spokes, 0.0, 0.0, base, smooth );
-		cinc_03.mesh.position.y +=height;
-		cinc_03.mesh.position.x -=width/2 - base/2 * form_k;
-		Craft.bend(cinc_03, angle);
-		World.scene.add(cinc_03.mesh);
+		// w body
+		let cinc_03 = Craft.bob( 0.3, height, length, cinctures, spokes, 0.6, -0.5, 0.05, 0.7 );
+			cinc_03.mesh.position.y +=height;
+			cinc_03.mesh.position.x -=width/2 - base/2 * form_k;
+			Craft.bendS(cinc_03, -3, 1, 0.4, 'X', 0.9);
+			
+			World.scene.add(cinc_03.mesh);
 	}
 
 	static rnd_scene_01() {

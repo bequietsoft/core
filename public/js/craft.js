@@ -56,7 +56,7 @@ class Craft {
 
 	static bob(
 			width = 0.5, height = 0.5, length=0.5,
-			angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
+			//angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
 			cinctures_cnt = 8,
 			spokes_cnt = 8,
 			curve_k = 0.0,
@@ -77,9 +77,9 @@ class Craft {
 
 			let steps = cinctures_cnt - 1;
 			let dy = height  / steps;
-			let ax = angle_x / steps;
-			let ay = angle_y / steps;
-			let az = angle_z / steps;
+			// let ax = angle_x / steps;
+			// let ay = angle_y / steps;
+			// let az = angle_z / steps;
 
 			for (let c=0; c < cinctures_cnt; c++) {
 				
@@ -102,11 +102,13 @@ class Craft {
 				
 				if (c > 0) {
 					cinc.data.offsets.push(0.0, dy, 0.0);
-					cinc.data.rotates.push(ax, ay, az);
+					//cinc.data.rotates.push(ax, ay, az);
 				} else {
 					cinc.data.offsets.push(0.0, 0.0 , 0.0);
-					cinc.data.rotates.push(0.0, 0.0 , 0.0);
+					//cinc.data.rotates.push(0.0, 0.0 , 0.0);
 				}
+
+				cinc.data.rotates.push(0.0, 0.0 , 0.0);
 
 			}
 			
@@ -116,15 +118,39 @@ class Craft {
 	}
 
 	// Modificators
-	static bend(cinc, ax=0.0, ay=0.0, az=0.0) {
+	static bendC(cinc, angle=0.0, axis='X', compensation_angle=0.0) {
 		let len = cinc.data.skeleton.bones.length;
+		console.log('bendC',angle);
 		cinc.data.skeleton.bones.forEach((bone, i) => {
-			if ( i > 0 && i <= (len-1) ) 
-				bone.rotation.set(ax/(len-2), ay/(len-2), az/(len-2));
+			if ( i > 0 && i < len-1 ) {
+				if (axis === 'X') bone.rotation.x += angle/(len-2);
+				if (axis === 'Y') bone.rotation.y += angle/(len-2);
+				if (axis === 'Z') bone.rotation.z += angle/(len-2);
+			}
 		});
-		cinc.data.bones[0].rotation.x -= ax/2;
-		cinc.data.bones[0].rotation.y -= ay/2;
-		cinc.data.bones[0].rotation.z -= az/2;
+		if (compensation_angle != 0.0) Craft.bend_compensation(cinc, axis, compensation_angle);
+	}
+
+	static bendS(cinc, angleA=0.0, angleB=0.0, k=0.5, axis='X', compensation_angle=0.0) {
+		let len = cinc.data.skeleton.bones.length;
+		console.log('bendS',angleA, angleB);
+		cinc.data.skeleton.bones.forEach((bone, i) => {
+			if ( i > 0 && i < len-1 ) {
+				let angle = angleA;
+				if (i/len > k) angle = angleB;
+				if (axis === 'X') bone.rotation.x += angle/(len-2);
+				if (axis === 'Y') bone.rotation.y += angle/(len-2);
+				if (axis === 'Z') bone.rotation.z += angle/(len-2);
+			}
+		});
+		if (compensation_angle != 0.0) Craft.bend_compensation(cinc, axis, compensation_angle);
+	}
+
+	static bend_compensation(cinc, axis, angle) {
+		console.log('comp', angle);
+		if (axis === 'X') cinc.data.bones[0].rotation.x += angle;
+		if (axis === 'Y') cinc.data.bones[0].rotation.y += angle;
+		if (axis === 'Z') cinc.data.bones[0].rotation.z += angle;
 	}
 	
 	// #region TODO
