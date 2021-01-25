@@ -1,6 +1,6 @@
 import * as THREE from "./three.module.js"
 import { mat } from "./material.js";
-import { Cincture, default_cincture_data } from "./cincture.js";
+import { Cincture } from "./cincture.js";
 //import { rndf } from "./rnd.js";
 
 const default_material = mat(0xffffff, 'standard');
@@ -55,16 +55,15 @@ class Craft {
 	}
 
 	static bob(
-		
-		width = 0.5, height = 0.5, length=0.5,
-		angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
-		cinctures_cnt = 8,
-		spokes_cnt = 8,
-		height_curve_k = 0.0,
-		spoke_base = 0.0,
-		smooth_normals = 1,
-		material=default_material
-
+			width = 0.5, height = 0.5, length=0.5,
+			angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
+			cinctures_cnt = 8,
+			spokes_cnt = 8,
+			curve_k = 0.0,
+			form_k = 0.0,
+			spoke_base = 0.0,
+			smooth_normals = 1,
+			material = default_material
 		) {
 			let hw = width / 2;
 			let hh = height / 2;
@@ -72,35 +71,32 @@ class Craft {
 
 			let cinc = new Cincture();
 				cinc.clear();
-				cinc.data.material =  default_material;
+				cinc.data.material =  material;
 				cinc.data.smooth.normals = smooth_normals;
 				//cinc.data.smooth.vertices = 1; // not realized yet
 
 			let steps = cinctures_cnt - 1;
-			//let steps_ = cinctures_cnt + 1;
-			let dy = height  / (cinctures_cnt - 1);
-			let ax = angle_x / (cinctures_cnt - 1);
-			let ay = angle_y / (cinctures_cnt - 1);
-			let az = angle_z / (cinctures_cnt - 1);
+			let dy = height  / steps;
+			let ax = angle_x / steps;
+			let ay = angle_y / steps;
+			let az = angle_z / steps;
 
 			for (let c=0; c < cinctures_cnt; c++) {
 				
 				let offset = Math.abs( hh - c * dy );//c * steps );//
-				let curve_k = height_curve_k * Math.sqrt( hh * hh - offset * offset ) / hh;
+				let cur_curve_k = curve_k * Math.sqrt( hh * hh - offset * offset ) / hh;
+				let cur_form_k = 1 + form_k * c / steps;
 
 				let da = Math.PI * 2 / spokes_cnt;
 
 				let a = Math.pow(hw, 2);
 				let b = Math.pow(hl, 2);
 				
-				console.log('cinc=' + c, a, b, curve_k, hh, offset);
-
+				//console.log('cinc=' + c, a, b, cur_curve_k, hh, offset);
 				for (let s=0; s < spokes_cnt; s++) {
-
 					let k2 = Math.pow( Math.tan(s * da), 2 );
-					let spoke = spoke_base + Math.sqrt( (a * b * ( 1 + k2 ) ) / ( a * k2 + b ) ) * curve_k;
+					let spoke = spoke_base + Math.sqrt( (a * b * ( 1 + k2 ) ) / ( a * k2 + b ) ) * cur_curve_k * cur_form_k;
 					//console.log('cinc=' + c, 'spoke=' + spoke);
-
 					cinc.data.nodes.push(spoke);
 				}
 				
@@ -119,6 +115,18 @@ class Craft {
 		return cinc;
 	}
 
+	// Modificators
+	static bend(cinc, ax=0.0, ay=0.0, az=0.0) {
+		let len = cinc.data.skeleton.bones.length;
+		cinc.data.skeleton.bones.forEach((bone, i) => {
+			if ( i > 0 && i <= (len-1) ) 
+				bone.rotation.set(ax/(len-2), ay/(len-2), az/(len-2));
+		});
+		cinc.data.bones[0].rotation.x -= ax/2;
+		cinc.data.bones[0].rotation.y -= ay/2;
+		cinc.data.bones[0].rotation.z -= az/2;
+	}
+	
 	// #region TODO
 
 	// function plane(y, step, material, shadow = false) {

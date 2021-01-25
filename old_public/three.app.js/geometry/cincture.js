@@ -1,8 +1,4 @@
-import * as THREE from "./three.module.js";
-import { mat, rgb } from "./material.js";
-import { V, GV, DP, DV, MV, RV, LV, V0 } from "./vectors.js";
-
-export var default_cincture_data = {
+var default_cincture_data = {
 	
 	name: 'default_cincture_name',
 
@@ -35,53 +31,47 @@ export var default_cincture_data = {
 	cap_curve: { begin: 0, end: 0 },
 	cap: { begin: true, end: true },
 	closed: true,
-	material: mat(rgb(200, 200, 200), 'phong'),
+	material: mat( 'lambert', rgb( 200, 200, 200 ), true ),
 	shadows: { cast: true, recive: true },
 	helpers: 0,
-	bone_markers: true,
-	nodes_markers: [],
 	vertices_epsilon: 0.001,
 	cloth: false,
 	clamp_cinc: { begin: 0, end: 1000000 },
-	bones: [],
 	skeleton: undefined,
-	first_bone: undefined,
-	last_bone: undefined,
 
 	uv: { x: 0, y: 0, width: 1, height: 1 }
 };
 
-export class Cincture {
+class Cincture {
 
-	constructor(data = default_cincture_data) {
-		this.data = Object.assign({}, data);
+	constructor( data = default_cincture_data ) {
+
+		this.points = [];
+		this.data = data;
+		this.data.nodes_markers = [];
+
 		this.geometry = new THREE.Geometry();
-		this.geometry.faceVertexUvs[0] = [];
-		//return this;
-	}
-	
-	build() {
+		this.geometry.faceVertexUvs[ 0 ] = [];
+
 		this.check_data();
 		this.calc_counters();
 		this.sub_divisions();
+		//this.smooth_vertices();
 		this.cals_angles();
 		this.build_geometry();
 		this.smooth_normals();
 		this.build_mesh();
 		this.build_skeleton();
 		this.add_helpers();
-	}
 
-	clear() {
-		this.data.offsets = [];
-		this.data.rotates = [];
-		this.data.nodes = [];
-	}
+		this.points = undefined;
+		delete this.points;
+    }
 
 	check_data() {
-		this.data.smooth.normals = this.clamp( this.data.smooth.normals, 0, 1 );
-		this.data.smooth.vertices = this.clamp( this.data.smooth.vertices, 0, 1 );
-		if (this.data.angles != undefined && this.data.nodes.length != this.data.angles.length) 
+		this.data.smooth.normals = clamp( this.data.smooth.normals, 0, 1 );
+		this.data.smooth.vertices = clamp( this.data.smooth.vertices, 0, 1 );
+		if ( this.data.angles != undefined && this.data.nodes.length != this.data.angles.length ) 
 			log( 'Wrong parameters: nodes and angles array must be some length.' );
 	}
 
@@ -93,9 +83,7 @@ export class Cincture {
 	sub_divisions() {
 		
 		if ( this.data.edges_mesh_build ) return;
-		
-		//console.log(this.data.subcincs);
-		
+
 		let _nodes_flags = [];
 		for( let ci = 0; ci < this.cincs_count; ci++ )
 			for( let ni = 0; ni < this.nodes_count; ni++ )
@@ -240,10 +228,10 @@ export class Cincture {
 
 	cals_angles() {
 
-		this.delta_angle = this.d2r( this.data.cinc_angle / this.nodes_count );
+		this.delta_angle = d2r( this.data.cinc_angle / this.nodes_count );
 		
 		if ( this.data.cinc_angle != 360 ) 
-			this.delta_angle = this.d2r( this.data.cinc_angle / (this.nodes_count - 1) );
+			this.delta_angle = d2r( this.data.cinc_angle / (this.nodes_count - 1) );
 	}
 
 	get_real_node( i ) { 
@@ -260,12 +248,16 @@ export class Cincture {
 		return this.data.nodes[ ri ] * this.data.scale; 
 	}
 
+	// get_real_node_value( i ) {
+	// 	return this.data.nodes[ this.get_real_node_index( i ) ] * this.data.scale; 
+	// }
+
 	get_real_angle( i ) { // 
 
 		if ( this.data.angles == undefined ) return this.delta_angle;
 
 		if ( !this.data.reverse_nodes ) {
-			return this.d2r( this.data.angles [ i ] );
+			return d2r( this.data.angles [ i ] );
 		}
 
 		let ci = Math.floor( i / this.nodes_count );
@@ -274,7 +266,7 @@ export class Cincture {
 		let ri = ci * this.nodes_count + ( this.nodes_count - 1 - ni );
 		//log( '4 ' + ci + ':' + ni + ' >> ri=' + ri);
 
-		return this.d2r( this.data.angles [ ri ] );
+		return d2r( this.data.angles [ ri ] );
 	}
 
 	check_clamp_cinc ( ci ) {
@@ -289,7 +281,7 @@ export class Cincture {
 
     build_geometry() {
 
-		let points = [];
+		let points = this.points;
 		let mirror = this.data.mirror;
 
 		// collect temp points
@@ -302,9 +294,9 @@ export class Cincture {
 			let offset = V( this.data.offsets[ fti + 0 ], this.data.offsets[ fti + 1 ], mirror * this.data.offsets[ fti + 2 ] );
 			let scaled_offset = MV( offset, this.data.scale );
 			total_rotation.add( V( mirror * this.data.rotates[ fti + 0 ], mirror * this.data.rotates[ fti + 1 ], this.data.rotates[ fti + 2 ] ) );
-			total_position.add( RV( scaled_offset, total_rotation) );
+			total_position.add( RV ( scaled_offset, total_rotation) );
 
-			let angle0 = mirror * this.d2r( this.data.start_angle );
+			let angle0 = mirror * d2r( this.data.start_angle );
 			let node0;
 			let angle1;
 			let node1;
@@ -323,7 +315,7 @@ export class Cincture {
 
 				if ( ni == this.nodes_count - 1 ) 
 					if ( this.data.cinc_angle < 360 )
-						angle1 = mirror * this.d2r( this.data.start_angle );
+						angle1 = mirror * d2r( this.data.start_angle );
 
 				let cos0 = Math.cos( angle0 );
 				let sin0 = Math.sin( angle0 );
@@ -371,13 +363,13 @@ export class Cincture {
 						sw = sw / 2;
 					}
 					
-					v0.uv = new THREE.Vector2( 0, 0 );
-					v1.uv = new THREE.Vector2( 0, 0 );
-					v2.uv = new THREE.Vector2( 0, 0 );
+					v0.uv = THREE.Vector2( 0, 0 );
+					v1.uv = THREE.Vector2( 0, 0 );
+					v2.uv = THREE.Vector2( 0, 0 );
 					
-					_v0.uv = new THREE.Vector2( 0, 0 );
-					_v1.uv = new THREE.Vector2( 0, 0 );
-					_v2.uv = new THREE.Vector2( 0, 0 );
+					_v0.uv = THREE.Vector2( 0, 0 );
+					_v1.uv = THREE.Vector2( 0, 0 );
+					_v2.uv = THREE.Vector2( 0, 0 );
 
 					if ( ci == 0 ) {
 						v0.uv = this.norm_uv ( sp.x - sw * (ni + 0), sp.y + sh * (ci + 0) );
@@ -443,27 +435,27 @@ export class Cincture {
 
 						// start cap faces
 						if ( this.data.cap.begin != 0 && ci == 0 && this.check_clamp_cinc( ci ) ) 
-							this.add_face( points, [ fpi + 0, fpi + 1, fpi + 2 ], [ ci, ci, ci ] );
+							this.add_face( [ fpi + 0, fpi + 1, fpi + 2 ], [ ci, ci, ci ] );
 
 						// down face 
 						if ( ci > 0 && this.check_clamp_cinc( ci - 1 ) ) {
 							var l0 = LV( DV( points[ fpi + 4 - len ], points[ fpi + 2 ] ) );
 							var l1 = LV( DV( points[ fpi + 5 - len ], points[ fpi + 1 ] ) );
-							if ( l0 >  l1 ) this.add_face( points, [ fpi + 4 - len, fpi + 1, fpi + 2], [ ci - 1, ci, ci ] );
-							if ( l1 >= l0 ) this.add_face( points, [ fpi + 5 - len, fpi + 1, fpi + 2], [ ci - 1, ci, ci ] );
+							if ( l0 >  l1 ) this.add_face( [ fpi + 4 - len, fpi + 1, fpi + 2], [ ci - 1, ci, ci ] );
+							if ( l1 >= l0 ) this.add_face( [ fpi + 5 - len, fpi + 1, fpi + 2], [ ci - 1, ci, ci ] );
 						}
 
 						// up face
 						if ( ci < this.cincs_count - 1 && this.check_clamp_cinc( ci ) ) {
 							var l0 = LV ( DV( points[ fpi + 1 + len ], points[ fpi + 2 ] ) );
 							var l1 = LV ( DV( points[ fpi + 2 + len ], points[ fpi + 1 ] ) );
-							if ( l0 >= l1 ) this.add_face( points, [ fpi + 1, fpi + 1 + len, fpi + 2 ], [ ci, ci + 1, ci] );
-							if ( l1 >  l0 ) this.add_face( points, [ fpi + 1, fpi + 2 + len, fpi + 2 ], [ ci, ci + 1, ci ] );
+							if ( l0 >= l1 ) this.add_face( [ fpi + 1, fpi + 1 + len, fpi + 2 ], [ ci, ci + 1, ci] );
+							if ( l1 >  l0 ) this.add_face( [ fpi + 1, fpi + 2 + len, fpi + 2 ], [ ci, ci + 1, ci ] );
 						}
 						
 						// end cap faces
 						if ( this.data.cap.end != 0 && ci == this.cincs_count - 1 && this.check_clamp_cinc( ci ) ) 
-							this.add_face( points, [ fpi + 3, fpi + 5, fpi + 4 ], [ ci, ci, ci ] );
+							this.add_face( [ fpi + 3, fpi + 5, fpi + 4 ], [ ci, ci, ci ] );
 
 
 						// add symmetry faces
@@ -474,27 +466,27 @@ export class Cincture {
 							
 							// start cap faces
 							if ( this.data.cap.begin != 0 && ci == 0 && this.check_clamp_cinc( ci ) ) 
-								this.add_face( points, [ fpi + 6, fpi + 8, fpi + 7 ], [ ci, ci, ci ] );
+								this.add_face( [ fpi + 6, fpi + 8, fpi + 7 ], [ ci, ci, ci ] );
 
 							// down face 
 							if ( ci > 0 && this.check_clamp_cinc( ci - 1 ) ) {
 								var l0 = LV ( DV( points[ fpi + 10 - len ], points[ fpi + 8 ] ) );
 								var l1 = LV ( DV( points[ fpi + 11 - len ], points[ fpi + 7 ] ) );
-								if ( l0 >  l1 ) this.add_face( points, [ fpi + 8, fpi + 7, fpi + 10 - len ], [ ci, ci, ci - 1 ] );
-								if ( l1 >= l0 ) this.add_face( points, [ fpi + 8, fpi + 7, fpi + 11 - len ], [ ci, ci, ci - 1 ] );
+								if ( l0 >  l1 ) this.add_face( [ fpi + 8, fpi + 7, fpi + 10 - len ], [ ci, ci, ci - 1 ] );
+								if ( l1 >= l0 ) this.add_face( [ fpi + 8, fpi + 7, fpi + 11 - len ], [ ci, ci, ci - 1 ] );
 							}
 
 							// up face
 							if ( ci < this.cincs_count - 1 && this.check_clamp_cinc( ci ) ) {
 								var l0 = LV ( DV( points[ fpi + 7 + len ], points[ fpi + 8 ] ) );
 								var l1 = LV ( DV( points[ fpi + 8 + len ], points[ fpi + 7 ] ) );
-								if ( l0 >= l1 ) this.add_face( points, [ fpi + 8, fpi + 7 + len, fpi + 7 ], [ ci, ci + 1, ci ] );
-								if ( l1 >  l0 ) this.add_face( points, [ fpi + 8, fpi + 8 + len, fpi + 7 ], [ ci, ci + 1, ci ] );
+								if ( l0 >= l1 ) this.add_face( [ fpi + 8, fpi + 7 + len, fpi + 7 ], [ ci, ci + 1, ci ] );
+								if ( l1 >  l0 ) this.add_face( [ fpi + 8, fpi + 8 + len, fpi + 7 ], [ ci, ci + 1, ci ] );
 							}
 							
 							// end cap faces
-							if (this.data.cap.end!=0 && ci==this.cincs_count-1 && this.check_clamp_cinc(ci)) 
-								this.add_face( points, [ fpi + 9, fpi + 10, fpi + 11 ], [ ci, ci, ci ] );
+							if ( this.data.cap.end != 0 && ci == this.cincs_count - 1 && this.check_clamp_cinc( ci ) ) 
+								this.add_face( [ fpi + 9, fpi + 10, fpi + 11 ], [ ci, ci, ci ] );
 						
 						}
 					}
@@ -508,17 +500,16 @@ export class Cincture {
 		this.geometry.computeVertexNormals();
 	}
 	
-	norm_uv(x, y) {
+	norm_uv( x, y ) {
 		// if (x < 0) while ( x < 0 ) { x += 1; }
 		// if (y < 0) y = 0; //while ( y < 0 ) { y += 1; }
 		// if (x > 1) while ( x > 1 ) { x -= 1; }
 		// if (y > 1) y = 1; //while ( y > 1 ) { y -= 1; }
-		return new THREE.Vector2(x, y);
+		return new THREE.Vector2 ( x, y );
 	}
 
 	build_mesh() {
-		this.buffer_geometry = new THREE.BufferGeometry().fromGeometry( this.geometry );
-		this.mesh = new THREE.SkinnedMesh( this.buffer_geometry, this.data.material );
+		this.mesh = new THREE.SkinnedMesh( this.geometry, this.data.material );
 		this.mesh.castShadow = this.data.shadows.cast;
 		this.mesh.receiveShadow = this.data.shadows.recive;
 	}
@@ -526,9 +517,9 @@ export class Cincture {
 	build_skeleton() {
 
 		// bind external skeleton
-		if (this.data.skeleton != undefined)
+		if ( this.data.skeleton != undefined)
 		{ 
-			this.mesh.bind(this.data.skeleton);
+			this.mesh.bind( this.data.skeleton );
 			return;
 		}
 
@@ -574,8 +565,8 @@ export class Cincture {
 				}
 				
 				if( nmf == 1 ) { 
-					// bone.marker = marker( nmv, color, 0.004, 8, this.data.node_markers );
-					// bone.add( bone.marker );
+					//bone.marker = marker( nmv, color, 0.004, 8, false );
+					//bone.add( bone.marker );
 				}
 			}
 
@@ -586,34 +577,30 @@ export class Cincture {
 		this.mesh.add( this.data.bones[ 0 ] );
 		this.data.skeleton = new THREE.Skeleton( this.data.bones );
 		this.mesh.bind( this.data.skeleton );
-
-		this.data.first_bone = this.data.bones[ 0 ];
-		this.data.last_bone = this.data.bones[ this.data.bones.length - 1 ];
 	}
 
-	// UC
 	add_helpers() {
 
-		if (this.data.helpers == 0) return;
+		if ( this.data.helpers == 0 ) return;
 
 		this.edges_helper = this.mesh.clone();
-		this.edges_helper.material = mat(rgb(255, 255, 200), 'wire');
+		this.edges_helper.material = mat('wire', rgb( 255, 255, 200 ));
 		this.edges_helper.castShadow = false;
 		this.edges_helper.receiveShadow = false;
 		this.edges_helper.skeleton = undefined;
 		
 
-		this.vertex_normals_helper = new THREE.VertexNormalsHelper(this.edges_helper, this.data.helpers, 0x00ff00, 0.01);
-		this.mesh.add(this.vertex_normals_helper);
+		this.vertex_normals_helper = new THREE.VertexNormalsHelper( this.edges_helper, this.data.helpers, 0x00ff00, 0.01 );
+		this.mesh.add( this.vertex_normals_helper );
 
-		this.face_normals_helper = new THREE.FaceNormalsHelper(this.edges_helper, this.data.helpers, 0xff0000, 0.01);
-		this.mesh.add(this.face_normals_helper);
+		this.face_normals_helper = new THREE.FaceNormalsHelper( this.edges_helper, this.data.helpers, 0xff0000, 0.01 );
+		this.mesh.add( this.face_normals_helper );
 
-		this.skeleton_helper = new THREE.SkeletonHelper(this.mesh);
-		App.world.scene.add(this.skeleton_helper);
+		this.skeleton_helper = new THREE.SkeletonHelper( this.mesh );
+		App.world.scene.add( this.skeleton_helper );
 
-		this.edges_helper.bind(this.data.skeleton);
-		this.mesh.add(this.edges_helper);
+		this.edges_helper.bind( this.data.skeleton );
+		this.mesh.add( this.edges_helper );
 	}
 
 	// utils :
@@ -670,27 +657,27 @@ export class Cincture {
 	}
 
 	mark_point( p, color ) {
-		let a = sphere(0.02, p, V0, mat(color, 'phong'));
-		this.marks.push(a);
+		let a = sphere( 0.02, p, V0, mat('phong', color ) );
+		this.marks.push ( a );
 	}
 
 	mark_face( fi ) {
 		log('face ' + fi + ' marked');
 		let geometry = this.geometry;
-		let face = geometry.faces[fi];
-		let a = sphere(0.02, geometry.vertices[face.a], V0, mat(rgb(200, 0, 0), 'phong'));
-		let b = sphere(0.02, geometry.vertices[face.b], V0, mat(rgb(0, 200, 0), 'phong'));
-		let c = sphere(0.02, geometry.vertices[face.c], V0, mat(rgb(0, 0, 200), 'phong'));
-		this.mesh.add(a);
-		this.mesh.add(b);
-		this.mesh.add(c);
+		let face = geometry.faces[ fi ];
+		let a = sphere( 0.02, geometry.vertices[ face.a ], V0, mat('phong', rgb(200, 0, 0) ) );
+		let b = sphere( 0.02, geometry.vertices[ face.b ], V0, mat('phong', rgb(0, 200, 0) ) );
+		let c = sphere( 0.02, geometry.vertices[ face.c ], V0, mat('phong', rgb(0, 0, 200) ) );
+		this.mesh.add( a );
+		this.mesh.add( b );
+		this.mesh.add( c );
 	}
 
-	add_face( points, vertex_index = [ 0, 0, 0 ], skin_index = [ 0, 0, 0 ] ) {
+	add_face( vertex_index = [ 0, 0, 0 ], skin_index = [ 0, 0, 0 ] ) {
 		
-		let v0 = points [ vertex_index[ 0 ] ];
-		let v1 = points [ vertex_index[ 1 ] ];
-		let v2 = points [ vertex_index[ 2 ] ];
+		let v0 = this.points [ vertex_index[ 0 ] ];
+		let v1 = this.points [ vertex_index[ 1 ] ];
+		let v2 = this.points [ vertex_index[ 2 ] ];
 
 		let vl = this.geometry.vertices.length;
 		
@@ -709,20 +696,20 @@ export class Cincture {
 		this.geometry.skinWeights.push( new THREE.Vector4( 1, 0, 0, 0) );
 	}
 
-	// smooth_vertices() {
+	smooth_vertices() {
 
-	// 	if ( this.data.smooth.vertices == 0 ) return; 
+		if ( this.data.smooth.vertices == 0 ) return; 
 
-	// 	//log( ' Smooth vertices:' );
-	// 	for ( let ci = 0; ci < this.cincs_count; ci++ ) {
-	// 		let _nodes = [];
-	// 		for ( let ni = 0; ni < this.cincs_count; ni++ ) {
-	// 			_nodes.push ( this.data.nodes[ ci * this.cincs_count + ni ] * this.data.scale );
-	// 		}
-	// 		//log( _nodes );
-	// 	}
-	// 	//log();
-	// }
+		//log( ' Smooth vertices:' );
+		for ( let ci = 0; ci < this.cincs_count; ci++ ) {
+			let _nodes = [];
+			for ( let ni = 0; ni < this.cincs_count; ni++ ) {
+				_nodes.push ( this.data.nodes[ ci * this.cincs_count + ni ] * this.data.scale );
+			}
+			//log( _nodes );
+		}
+		//log();
+	}
 
 	normilize_geometry_verices( i, j ) {
 		
@@ -810,27 +797,11 @@ export class Cincture {
 		}
 	}
 
-	// first_bone() {
-	// 	return this.data.bones[ 0 ];
-	// }
-
-	// last_bone() {
-	// 	return this.data.bones[ this.data.bones.length - 1 ];
-	// }
-
-	// clamp value
-	clamp( v, a, b ) {
-		if ( v > b ) return b;
-		if ( v < a ) return a;
-		return v;
+	first_bone() {
+		return this.data.bones[ 0 ];
 	}
 
-	// convert degrees to radians
-	d2r(deg) {
-		return deg * Math.PI / 180;
+	last_bone() {
+		return this.data.bones[ this.data.bones.length - 1 ];
 	}
-
-	// get_real_node_value( i ) {
-	// 	return this.data.nodes[ this.get_real_node_index( i ) ] * this.data.scale; 
-	// }
 }
