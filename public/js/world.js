@@ -53,13 +53,13 @@ class World {
 		World.camera.add(World.cameraDirLight);		
 		World.cameraDirLight.target = World.camera.target;
 
-			World.camera.position.x -= 6;
-			World.camera.position.y += 1;
+			World.camera.position.x -= 4;
+			World.camera.position.y += 1.5;
 			//World.camera.root.rotateY(Math.PI/8);
 			
 			//World.camera.root.rotateY(-Math.PI/4);
-			World.camera.target.rotateY(-Math.PI/2); 
-			World.camera.target.rotateZ(-Math.PI/8); 
+			World.camera.target.rotateY(-Math.PI/1); 
+			World.camera.target.rotateZ(-Math.PI/6); 
 			World.camera.lookAt(World.camera.root.position);
 
 		World.scene.add(World.hemiLight);
@@ -76,6 +76,7 @@ class World {
 		//World.add_helpers();
 		//World.demo_scene_00();
 		World.demo_scene_01();
+		//World.demo_scene_02();
 		//World.rnd_scene_01();
 	}
 
@@ -93,8 +94,6 @@ class World {
 
 	static demo_scene_01() {
 		
-		
-		
 		let width = 0.4, height = 0.5, length = 0.15;
 		
 		let cinctures = 16;
@@ -110,22 +109,63 @@ class World {
 		// let angleA = -Math.PI;
 		// let angleB = +Math.PI/4;
 
-		// m body
-		let cinc_02 = Craft.bob( 0.4, height, length, cinctures, spokes, 0.4, 0.5, 0.05, 0.7 );
-			cinc_02.mesh.position.y +=height;
-			cinc_02.mesh.position.x +=width/2 + base/2 * form_k;
-			//Craft.bendC(cinc_02, angle, 'X', -angle/2);
-			Craft.bendS(cinc_02, -3, 1, 0.4, 'X', 0.9);
-			
-			World.scene.add(cinc_02.mesh);
+		let m_height = 1.7;
+		let mh = 1.7 / 8;
+
 		
-		// w body
-		let cinc_03 = Craft.bob( 0.3, height, length, cinctures, spokes, 0.6, -0.5, 0.05, 0.7 );
-			cinc_03.mesh.position.y +=height;
-			cinc_03.mesh.position.x -=width/2 - base/2 * form_k;
-			Craft.bendS(cinc_03, -3, 1, 0.4, 'X', 0.9);
+		for (let i=0; i<4; i++) {
+			let box = Craft.box(mh * 3, mh, mh * 2, mat(0xffffff, 'wire'));
+			box.position.y = i * mh * 2 + mh / 2;
+			World.scene.add(box);
+		}
+
+		let d = 16;
+
+		// m
+		let m_head = Craft.bob( 0.15, mh, 0.2,    d, d,    1.0, 0.25,    0.0, 0.75 );
+			m_head.mesh.position.set(0.0, mh/6, 0.0);
+			//m_head.mesh.rotation.set(2.0, 0.0, 0.0);
+		let m_body = Craft.bob( mh * 2, mh * 3 , mh, d, d,    0.3, 0.95,    0.05, 0.75 );
+			m_body.mesh.position.y += m_height * 4 / 8;
+			Craft.bendS(m_body, -2, 1, 0.3, 'X', 0.25);
+		// let m_lshoulder = Craft.bob( mh, mh*1.1 , mh, d, d,    0.3, 1.0,    0.005, 0.75 );
+		// 	m_lshoulder.mesh.position.set(0.0, -0.01, -0.025);
+		// 	m_lshoulder.mesh.rotation.set(-0.20, 0.1, -2);
+			//Craft.bendS(m_larm, -2, 1, 0.3, 'X', 0.25);
+		// let m_larm = Craft.bob( mh*0.9, mh*2 , mh, d, d,    0.4, -0.6,    0.02, 0.75 );
+		// 	m_larm.mesh.position.set(0.00, -0.05, 0.0);
+		// 	m_larm.mesh.rotation.set(0.0, 0.0, -0.70);
+		// 	Craft.bendC(m_larm, 0.3, 'X');
+		let m_larm = Craft.bob( mh*0.5, mh*3 , mh, d, d,    0.4, -0.6,    0.02, 0.75 );
+			m_larm.mesh.position.set(0.00, -0.03, -0.025);
+			m_larm.mesh.rotation.set(0.0, 0.0, -1.70);
+			Craft.bendC(m_larm, 0.5, 'X');
+
+		m_body.data.last_bone.add(m_head.mesh);
+		// m_body.data.last_bone.add(m_lshoulder.mesh);
+		
+		// m_lshoulder.data.last_bone.add(m_larm.mesh);
+		m_body.data.last_bone.add(m_larm.mesh);
+		World.scene.add(m_body.mesh);
+
+		// // w
+		// let cinc_03 = Craft.bob( 0.3, height, length, cinctures, spokes, 0.6, -0.5, 0.05, 0.7 );
+		// 	cinc_03.mesh.position.y +=height;
+		// 	cinc_03.mesh.position.x -=width/2 - base/2 * form_k;
+		// 	Craft.bendS(cinc_03, -3, 1, 0.4, 'X', 0.9);
 			
-			World.scene.add(cinc_03.mesh);
+		// 	World.scene.add(cinc_03.mesh);
+	}
+
+	static demo_scene_02() {	
+		let cinc_00 = Craft.bob( 0.15, 0.25, 0.2,    32, 32,    1.0, 0.25,    0.0,    0.5 );
+			cinc_00.mesh.position.y += 0.5;
+			//cinc_00.mesh.position.x += 0.1;
+			//Craft.bendS(cinc_00, Math.PI/2, 'X', -Math.PI/4);
+			//Craft.bendS(cinc_00, 2, 1, 0,5, 'X', 1);
+			//Craft.bendS(cinc_00, -3, 1, 0.4, 'X', 0.9);
+			
+			World.scene.add(cinc_00.mesh);
 	}
 
 	static rnd_scene_01() {

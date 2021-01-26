@@ -21,14 +21,15 @@ class Craft {
 	}
 
 	static box(
-		size=default_size, 
+		width = 0.5, height = 0.5, length=0.5,
 		material=default_material
 		// position=v, rotation=v, 
 		// material=default_material, 
 		// shadow=true
 		) {
 			//console.log(material);
-		var geometry = new THREE.BoxGeometry(size.width, size.height, size.length);
+		//if (material === default_material) material = Object.assign({}, default_material);
+		var geometry = new THREE.BoxGeometry(width, height, length);
 		var mesh = new THREE.Mesh(geometry, material);
 			// mesh.position.set(position.x, position.y, position.z);
 			// mesh.rotation.set(rotation.x, rotation.y, rotation.z);
@@ -57,12 +58,17 @@ class Craft {
 	static bob(
 			width = 0.5, height = 0.5, length=0.5,
 			//angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
+			
 			cinctures_cnt = 8,
 			spokes_cnt = 8,
+			
 			curve_k = 0.0,
 			form_k = 0.0,
+			
 			spoke_base = 0.0,
+			
 			smooth_normals = 1,
+			
 			material = default_material
 		) {
 			let hw = width / 2;
