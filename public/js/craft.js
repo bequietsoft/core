@@ -55,7 +55,7 @@ class Craft {
 		return mesh;
 	}
 
-	static bob(
+	static mesh(
 			width = 0.5, height = 0.5, length=0.5,
 			//angle_x = 0.0, angle_y = 0.0, angle_z = 0.0,
 			
@@ -124,22 +124,32 @@ class Craft {
 	}
 
 	// Modificators
-	static bendC(cinc, angle=0.0, axis='X', compensation_angle=0.0) {
+	static bendC(cinc, angle=0.0, axis='X', c_angle=0, start=0, end=0) {
 		let len = cinc.data.skeleton.bones.length;
-		console.log('bendC',angle);
+		// if (end === 0) end = len;
+		// if (start > 0 || end < len) len = end - start;
+		// if (len < 2) {
+		// 	console.log(start, end);
+
+		// 	return;
+		// }
+		
+		//console.log('bendC',angle);
 		cinc.data.skeleton.bones.forEach((bone, i) => {
-			if ( i > 0 && i < len-1 ) {
-				if (axis === 'X') bone.rotation.x += angle/(len-2);
-				if (axis === 'Y') bone.rotation.y += angle/(len-2);
-				if (axis === 'Z') bone.rotation.z += angle/(len-2);
-			}
+			//if ( i >= start || i <= end)
+				if ( i > 0 && i < cinc.data.skeleton.bones.length-1 ) {
+					if (axis === 'X') bone.rotation.x += angle/(len-2);
+					if (axis === 'Y') bone.rotation.y += angle/(len-2);
+					if (axis === 'Z') bone.rotation.z += angle/(len-2);
+				}
 		});
-		if (compensation_angle != 0.0) Craft.bend_compensation(cinc, axis, compensation_angle);
+		if (c_angle != 0.0) Craft.bend_compensation(cinc, axis, c_angle);
 	}
 
-	static bendS(cinc, angleA=0.0, angleB=0.0, k=0.5, axis='X', compensation_angle=0.0) {
+	static bendS(cinc, angleA=0.0, angleB=0.0, k=0.5, axis='X', c_angle=0, start=0, end=0) {
 		let len = cinc.data.skeleton.bones.length;
-		console.log('bendS',angleA, angleB);
+		if (end === 0) end = len;
+		//console.log('bendS',angleA, angleB);
 		cinc.data.skeleton.bones.forEach((bone, i) => {
 			if ( i > 0 && i < len-1 ) {
 				let angle = angleA;
@@ -149,7 +159,7 @@ class Craft {
 				if (axis === 'Z') bone.rotation.z += angle/(len-2);
 			}
 		});
-		if (compensation_angle != 0.0) Craft.bend_compensation(cinc, axis, compensation_angle);
+		if (c_angle != 0.0) Craft.bend_compensation(cinc, axis, c_angle);
 	}
 
 	static bend_compensation(cinc, axis, angle) {

@@ -105,50 +105,37 @@ class World {
 		
 		let smooth = 0.95;
 
-		let angle = -Math.PI/2;
-		// let angleA = -Math.PI;
-		// let angleB = +Math.PI/4;
-
+		let PI = Math.PI;
 		let m_height = 1.7;
 		let mh = 1.7 / 8;
 
-		
+		// boxes
 		for (let i=0; i<4; i++) {
 			let box = Craft.box(mh * 3, mh, mh * 2, mat(0xffffff, 'wire'));
 			box.position.y = i * mh * 2 + mh / 2;
 			World.scene.add(box);
 		}
 
-		let d = 16;
-
-		// m
-		let m_head = Craft.bob( 0.15, mh, 0.2,    d, d,    1.0, 0.25,    0.0, 0.75 );
+		// male
+		let m_head = Craft.mesh( 0.15, mh, 0.2,    		16, 16,    1.0, 0.25,    0.0, 0.75 );
 			m_head.mesh.position.set(0.0, mh/6, 0.0);
 			//m_head.mesh.rotation.set(2.0, 0.0, 0.0);
-		let m_body = Craft.bob( mh * 2, mh * 3 , mh, d, d,    0.3, 0.95,    0.05, 0.75 );
+		let m_body = Craft.mesh( mh * 2, mh * 3 , mh,	16, 16,    0.3, 0.95,    0.05, 0.75 );
 			m_body.mesh.position.y += m_height * 4 / 8;
 			Craft.bendS(m_body, -2, 1, 0.3, 'X', 0.25);
-		// let m_lshoulder = Craft.bob( mh, mh*1.1 , mh, d, d,    0.3, 1.0,    0.005, 0.75 );
-		// 	m_lshoulder.mesh.position.set(0.0, -0.01, -0.025);
-		// 	m_lshoulder.mesh.rotation.set(-0.20, 0.1, -2);
-			//Craft.bendS(m_larm, -2, 1, 0.3, 'X', 0.25);
-		// let m_larm = Craft.bob( mh*0.9, mh*2 , mh, d, d,    0.4, -0.6,    0.02, 0.75 );
-		// 	m_larm.mesh.position.set(0.00, -0.05, 0.0);
-		// 	m_larm.mesh.rotation.set(0.0, 0.0, -0.70);
-		// 	Craft.bendC(m_larm, 0.3, 'X');
-		let m_larm = Craft.bob( mh*0.5, mh*3 , mh, d, d,    0.4, -0.6,    0.02, 0.75 );
+		let m_larm = Craft.mesh( mh*0.5, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02, 0.75 );
 			m_larm.mesh.position.set(0.00, -0.03, -0.025);
-			m_larm.mesh.rotation.set(0.0, 0.0, -1.70);
+			m_larm.mesh.rotation.set(0.0, 0.20, -PI/2);
 			Craft.bendC(m_larm, 0.5, 'X');
+			Craft.bendC(m_larm, -PI/4, 'Z', 0, 2, 3);
+			// m_larm.data.bones[2].rotation.set(0, 0, -PI/8);
+			// m_larm.data.bones[3].rotation.set(0, 0, -PI/8);
 
 		m_body.data.last_bone.add(m_head.mesh);
-		// m_body.data.last_bone.add(m_lshoulder.mesh);
-		
-		// m_lshoulder.data.last_bone.add(m_larm.mesh);
 		m_body.data.last_bone.add(m_larm.mesh);
 		World.scene.add(m_body.mesh);
 
-		// // w
+		// // female
 		// let cinc_03 = Craft.bob( 0.3, height, length, cinctures, spokes, 0.6, -0.5, 0.05, 0.7 );
 		// 	cinc_03.mesh.position.y +=height;
 		// 	cinc_03.mesh.position.x -=width/2 - base/2 * form_k;
