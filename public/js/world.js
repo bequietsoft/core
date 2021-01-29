@@ -7,6 +7,7 @@ import { mat } from "./material.js";
 import { rndi, rndf } from "./rnd.js";
 import Craft from "./craft.js";
 import Person from "./person.js";
+import App from "./app.js";
 //import { Material } from "./three.module.js";
 
 class World {
@@ -54,7 +55,8 @@ class World {
 		World.cameraDirLight.target = World.camera.target;
 
 			World.camera.position.x -= 4;
-			World.camera.position.y += 1.5;
+			//World.camera.position.y += 1.3;
+			World.camera.root.position.y += 1.4;
 			//World.camera.root.rotateY(Math.PI/8);
 			
 			//World.camera.root.rotateY(-Math.PI/4);
@@ -106,34 +108,51 @@ class World {
 		let smooth = 0.95;
 
 		let PI = Math.PI;
-		let m_height = 1.7;
-		let mh = 1.7 / 8;
+		let m_height = 1.6;
+		let mh = m_height / 8;
 
-		// boxes
-		for (let i=0; i<4; i++) {
-			let box = Craft.box(mh * 3, mh, mh * 2, mat(0xffffff, 'wire'));
-			box.position.y = i * mh * 2 + mh / 2;
-			World.scene.add(box);
-		}
+		// // boxes
+		// for (let i=0; i<4; i++) {
+		// 	let box = Craft.box(mh * 3, mh, mh * 2, mat(0xffffff, 'wire'));
+		// 	box.position.y = i * mh * 2 + mh / 2;
+		// 	World.scene.add(box);
+		// }
 
 		// male
-		let m_head = Craft.mesh( 0.15, mh, 0.2,    		16, 16,    1.0, 0.25,    0.0, 0.75 );
+		let m_head = Craft.mesh( mh*0.75, mh, mh*0.9,    		16, 16,    1.0, 0.25,    0.0,    0.75 );
 			m_head.mesh.position.set(0.0, mh/6, 0.0);
-			//m_head.mesh.rotation.set(2.0, 0.0, 0.0);
-		let m_body = Craft.mesh( mh * 2, mh * 3 , mh,	16, 16,    0.3, 0.95,    0.05, 0.75 );
+			m_head.mesh.rotation.set(-0.4, 0.0, 0.0);
+		let m_body = Craft.mesh( mh * 2, mh * 3 , mh,	16, 16,    0.3, 0.95,    0.05,    0.75 );
 			m_body.mesh.position.y += m_height * 4 / 8;
-			Craft.bendS(m_body, -2, 1, 0.3, 'X', 0.25);
-		let m_larm = Craft.mesh( mh*0.5, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02, 0.75 );
+			Craft.bendS(m_body, -1.5, 0.7, 0.3, 'X', 0.25);
+		let m_larm = Craft.mesh( mh*0.5, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02,    0.75 );
 			m_larm.mesh.position.set(0.00, -0.03, -0.025);
-			m_larm.mesh.rotation.set(0.0, 0.20, -PI/2);
-			Craft.bendC(m_larm, 0.5, 'X');
-			Craft.bendC(m_larm, -PI/4, 'Z', 0, 2, 3);
-			// m_larm.data.bones[2].rotation.set(0, 0, -PI/8);
-			// m_larm.data.bones[3].rotation.set(0, 0, -PI/8);
+			m_larm.mesh.rotation.set(0.0, 0.0, -PI/2);
+		let m_rarm = Craft.mesh( mh*0.5, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02,    0.75 );
+			m_rarm.mesh.position.set(0.00, -0.03, -0.025);
+			m_rarm.mesh.rotation.set(0.0, 0.0, +PI/2);			
+		let m_lleg = Craft.mesh( mh, mh*4 , mh,		16, 16,    0.4, -0.6,    0.03, 0.75 );
+			m_lleg.mesh.position.set(+0.07, 0.12, 0.0);
+			m_lleg.mesh.rotation.set(-0.20, 0.0, -PI);
+		let m_rleg = Craft.mesh( mh, mh*4 , mh,		16, 16,    0.4, -0.6,    0.03, 0.75 );
+			m_rleg.mesh.position.set(-0.07, 0.12, 0.0);
+			m_rleg.mesh.rotation.set(-0.20, 0.0, -PI);		
+		
+		//Craft.bendC(m_larm, 0.5, 'X');
+		//Craft.bendC(m_larm, -PI/4, 'Z', 0, 2, 3);
+		// m_larm.data.bones[2].rotation.set(0, 0, -PI/8);
+		// m_larm.data.bones[3].rotation.set(0, 0, -PI/8);
 
 		m_body.data.last_bone.add(m_head.mesh);
 		m_body.data.last_bone.add(m_larm.mesh);
+		m_body.data.last_bone.add(m_rarm.mesh);
+		m_body.data.first_bone.add(m_lleg.mesh);
+		m_body.data.first_bone.add(m_rleg.mesh);
+		
+		// console.log(m_larm.data.craft);
+		// console.log(m_rarm.data.craft);
 		World.scene.add(m_body.mesh);
+		//m_body.data.first_bone.add(World.camera.root);
 
 		// // female
 		// let cinc_03 = Craft.bob( 0.3, height, length, cinctures, spokes, 0.6, -0.5, 0.05, 0.7 );

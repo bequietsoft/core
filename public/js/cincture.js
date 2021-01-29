@@ -26,6 +26,17 @@ export var default_cincture_data = {
 	cinc_angle: 360, 	// used if angles array is undefined
 	start_angle: 0,
 
+	// craft: {
+		width: 0.3, 
+		height: 0.3, 
+		length: 0.3,
+		cinc_cnt: 4,
+		nodes_cnt: 4,
+		curve_k: 1.0,
+		form_k: 0.0,
+		cinc_base: 0.0,
+	// },
+
 	symmetry: false,
 	mirror: 1,
 	scale: 1,
@@ -53,7 +64,7 @@ export var default_cincture_data = {
 
 export class Cincture {
 
-	constructor(data = default_cincture_data) {
+	constructor(data=default_cincture_data) {
 		this.data = Object.assign({}, data);
 		this.geometry = new THREE.Geometry();
 		this.geometry.faceVertexUvs[0] = [];
