@@ -87,7 +87,7 @@ class Craft {
 				cinc.data.material =  material;
 				//cinc.data.smooth.vertices = 1; // not realized yet
 			
-			console.log('mesh', cinc.data.cinc_base);
+			//console.log('mesh', cinc.data.cinc_base);
 
 			let steps = cinc_cnt - 1;
 			let dy = height  / steps;
@@ -111,6 +111,8 @@ class Craft {
 				
 				if (c > 0) 
 					cinc.data.offsets.push(0.0, dy, 0.0);
+
+					
 				else
 					cinc.data.offsets.push(0.0, 0.0, 0.0);
 

@@ -76,13 +76,13 @@ class World {
 		//World.camera.root.position.y += 0.5;
 
 		//World.add_helpers();
-		//World.demo_scene_00();
-		World.demo_scene_01();
-		//World.demo_scene_02();
+		//World.test_scene_00();
+		World.test_scene_01();
+		//World.test_scene_02();
 		//World.rnd_scene_01();
 	}
 
-	static demo_scene_00() {
+	static test_scene_00() {
 	
 		let box = Craft.box(
 			{width: 0.5, height: 0.5, length: 0.5 }
@@ -94,18 +94,18 @@ class World {
 		World.scene.add(box);
 	}
 
-	static demo_scene_01() {
+	static test_scene_01() {
 		
-		let width = 0.4, height = 0.5, length = 0.15;
+		// let width = 0.4, height = 0.5, length = 0.15;
 		
-		let cinctures = 16;
-		let spokes = 16;
+		// let cinctures = 16;
+		// let spokes = 16;
 		
-		let curve_k = 0.5;
-		let form_k	= 0.75;
-		let base = 0.05;
+		// let curve_k = 0.5;
+		// let form_k	= 0.75;
+		// let base = 0.05;
 		
-		let smooth = 0.95;
+		// let smooth = 0.95;
 
 		let PI = Math.PI;
 		let m_height = 1.6;
@@ -119,18 +119,20 @@ class World {
 		// }
 
 		// male
-		let m_head = Craft.mesh( mh*0.75, mh, mh*0.9,    		16, 16,    1.0, 0.25,    0.0,    0.75 );
+		let m_head = Craft.mesh( mh*0.75, mh, mh*0.9,   16, 16,    1.0, 0.25,    0.0,    0.75 );
 			m_head.mesh.position.set(0.0, mh/6, 0.0);
 			m_head.mesh.rotation.set(-0.4, 0.0, 0.0);
 		let m_body = Craft.mesh( mh * 2, mh * 3 , mh,	16, 16,    0.3, 0.95,    0.05,    0.75 );
 			m_body.mesh.position.y += m_height * 4 / 8;
 			Craft.bendS(m_body, -1.5, 0.7, 0.3, 'X', 0.25);
-		let m_larm = Craft.mesh( mh*0.5, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02,    0.75 );
+
+		let m_larm = Craft.mesh( mh*0.75, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02,    0.75 );
 			m_larm.mesh.position.set(0.00, -0.03, -0.025);
-			m_larm.mesh.rotation.set(0.0, 0.0, -PI/2);
-		let m_rarm = Craft.mesh( mh*0.5, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02,    0.75 );
+			m_larm.mesh.rotation.set(-0.25 + PI, 0.0, -PI/2);
+		let m_rarm = Craft.mesh( mh*0.75, mh*3 , mh,		16, 16,    0.4, -0.6,    0.02,    0.75 );
 			m_rarm.mesh.position.set(0.00, -0.03, -0.025);
-			m_rarm.mesh.rotation.set(0.0, 0.0, +PI/2);			
+			m_rarm.mesh.rotation.set(-0.25, 0.0, +PI/2);
+
 		let m_lleg = Craft.mesh( mh, mh*4 , mh,		16, 16,    0.4, -0.6,    0.03, 0.75 );
 			m_lleg.mesh.position.set(+0.07, 0.12, 0.0);
 			m_lleg.mesh.rotation.set(-0.20, 0.0, -PI);
@@ -138,6 +140,20 @@ class World {
 			m_rleg.mesh.position.set(-0.07, 0.12, 0.0);
 			m_rleg.mesh.rotation.set(-0.20, 0.0, -PI);		
 		
+		//let m_rarm_j01 = m_rarm.data.bones[3];
+		m_larm.data.bones[1].rotation.z += 0.15;
+		m_larm.data.bones[2].rotation.z += 0.25;
+		m_larm.data.bones[3].rotation.z += 0.50;
+		m_larm.data.bones[4].rotation.z += 0.25;
+		m_larm.data.bones[5].rotation.z += 0.15;
+
+		m_rarm.data.bones[1].rotation.z += 0.15;
+		m_rarm.data.bones[2].rotation.z += 0.25;
+		m_rarm.data.bones[3].rotation.z += 0.50;
+		m_rarm.data.bones[4].rotation.z += 0.25;
+		m_rarm.data.bones[5].rotation.z += 0.15;
+		//m_rarm_j01.rotation.z += 1.2;
+
 		//Craft.bendC(m_larm, 0.5, 'X');
 		//Craft.bendC(m_larm, -PI/4, 'Z', 0, 2, 3);
 		// m_larm.data.bones[2].rotation.set(0, 0, -PI/8);
@@ -163,7 +179,7 @@ class World {
 		// 	World.scene.add(cinc_03.mesh);
 	}
 
-	static demo_scene_02() {	
+	static test_scene_02() {	
 		let cinc_00 = Craft.bob( 0.15, 0.25, 0.2,    32, 32,    1.0, 0.25,    0.0,    0.5 );
 			cinc_00.mesh.position.y += 0.5;
 			//cinc_00.mesh.position.x += 0.1;
