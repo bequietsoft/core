@@ -153,6 +153,28 @@ class Craft {
 		if (c_angle != 0.0) Craft.bend_compensation(cinc, axis, c_angle);
 	}
 
+	static bend(cinc, angle=0.0, axis='X', start_bone_index=0, end_bone_index=-1) {
+		
+		let len = cinc.data.skeleton.bones.length;
+		if (end_bone_index === -1) end_bone_index = len - 1;
+		let step = Math.PI / (end_bone_index - start_bone_index + 1);
+		let a = 0;
+		let r = 0;
+		//console.log(angle);
+		for(let i=start_bone_index; i<=end_bone_index; i++) {
+			let d = angle / (end_bone_index - start_bone_index - 1) * Math.sin(a);
+			//console.log(angle, step, d, a);
+			let bone = cinc.data.skeleton.bones[i];
+			if (axis === 'X') bone.rotation.x += d;
+			if (axis === 'Y') bone.rotation.y += d;
+			if (axis === 'Z') bone.rotation.z += d;
+			a += step;
+			r += d;
+		}
+		//console.log(r);
+		
+	}
+
 	static bend_compensation(cinc, axis, angle) {
 		//console.log('comp', angle);
 		if (axis === 'X') cinc.data.bones[0].rotation.x += angle;
