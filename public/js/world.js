@@ -111,41 +111,59 @@ class World {
 			box.position.y = i * mh * 2 + mh / 2;
 			World.scene.add(box);
 		}
-
-		// male
-		let m_head = Craft.mesh( mh*0.75, mh, mh*0.9,   cc, nc,    1.0, 0.25,    0.0,    0.75 );
+		
+								//width
+										//height
+												//length
+														//cinc_cnt, nodes_cnt
+																	//curve_k, form_k 
+																				//cinc_base 
+																						//smooth_normals
+		let m_head = Craft.mesh( mh*0.75, mh, mh*0.9,   cc, nc,    	1.0, 0.25,	0.0,	0.75 );
 			m_head.mesh.position.set(0.0, mh/6, 0.0);
 			m_head.mesh.rotation.set(-0.4, 0.0, 0.0);
-		let m_body = Craft.mesh( mh * 2, mh * 3 , mh,	cc, nc,    0.3, 0.95,    0.05,    0.75 );
+
+		let m_body = Craft.mesh( mh * 2.4, mh * 3 , mh,	cc, nc,    	0.3, 0.95,	0.05,	0.75 );
 			m_body.mesh.position.y += m_height * 4 / 8;
 			Craft.bendS(m_body, -1.5, 0.7, 0.3, 'X', 0.25);
 
-		let m_larm = Craft.mesh( mh*0.75, marm , mh,		cc, nc,    0.4, -0.6,    0.02,    0.75 );
-			m_larm.mesh.position.set(0.00, -0.03, -0.025);
-			m_larm.mesh.rotation.set(-0.25 + PI, 0.0, -PI/2);
-		let m_rarm = Craft.mesh( mh*0.75, marm , mh,		cc, nc,    0.4, -0.6,    0.02,    0.75 );
-			m_rarm.mesh.position.set(0.00, -0.03, -0.025);
-			m_rarm.mesh.rotation.set(-0.25, 0.0, +PI/2);
+		let m_larm = Craft.mesh( mh, marm , mh,			cc, nc,    	0.5, -0.6,	0.01,	0.75 );
+			m_larm.mesh.position.set(0.00, -0.06, -0.025);
+			m_larm.mesh.rotation.set(PI, 0.0, -PI/2);
 
-		let m_lleg = Craft.mesh( mh, mleg , mh,		cc, nc,    0.4, -0.6,    0.03, 0.75 );
-			m_lleg.mesh.position.set(+0.07, 0.12, 0.0);
-			m_lleg.mesh.rotation.set(-0.20, 0.0, -PI);
-		let m_rleg = Craft.mesh( mh, mleg , mh,		cc, nc,    0.4, -0.6,    0.03, 0.75 );
-			m_rleg.mesh.position.set(-0.07, 0.12, 0.0);
-			m_rleg.mesh.rotation.set(-0.20, 0.0, -PI);		
+		let m_rarm = Craft.mesh( mh, marm , mh,			cc, nc,    	0.5, -0.6,	0.01,	0.75 );
+			m_rarm.mesh.position.set(0.00, -0.06, -0.025);
+			m_rarm.mesh.rotation.set(0.0, 0.0, +PI/2);
+
+		let m_lleg = Craft.mesh( mh, mleg , mh,		cc, nc,			0.5, -0.6,	0.03,	0.75 );
+			m_lleg.mesh.position.set(+0.1, 0.12, 0.0);
+			m_lleg.mesh.rotation.set(-0.2, 0.0, -PI);
+
+		let m_rleg = Craft.mesh( mh, mleg , mh,		cc, nc,			0.5, -0.6,	0.03,	0.75 );
+			m_rleg.mesh.position.set(-0.1, 0.12, 0.0);
+			m_rleg.mesh.rotation.set(-0.2, 0.0, -PI);		
 		
+
+		let m_lhand = Craft.mesh( mh*0.1, mh*0.6, mh*0.3,   10, 10,    1.0, 1.0,    0.0,    0.75 );
+			m_lhand.mesh.position.set(0.0, -mh/5, 0.0);
+		let m_rhand = Craft.mesh( mh*0.1, mh*0.6, mh*0.3,   10, 10,    1.0, 1.0,    0.0,    0.75 );
+			m_rhand.mesh.position.set(0.0, -mh/5, 0.0);
+
 		// arms
-		Craft.bend(m_larm, +PI/2, 'Z', 0, 5);
-		Craft.bend(m_rarm, +PI/2, 'Z', 0, 5);
+		Craft.bend(m_larm, +PI/2.6, 'Z', 2, 6);
+		Craft.bend(m_rarm, +PI/2.6, 'Z', 2, 6);
 		Craft.bend(m_larm, -PI/12, 'X', cc/2-cc/8, cc/2+cc/8);
 		Craft.bend(m_rarm, +PI/12, 'X', cc/2-cc/8, cc/2+cc/8);
 
 		m_body.data.last_bone.add(m_head.mesh);
 		m_body.data.last_bone.add(m_larm.mesh);
 		m_body.data.last_bone.add(m_rarm.mesh);
+		m_larm.data.last_bone.add(m_lhand.mesh);
+		m_rarm.data.last_bone.add(m_rhand.mesh);
 		m_body.data.first_bone.add(m_lleg.mesh);
 		m_body.data.first_bone.add(m_rleg.mesh);
-
+		
+		
 		World.scene.add(m_body.mesh);
 	}
 
