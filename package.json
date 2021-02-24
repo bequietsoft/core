@@ -24,6 +24,8 @@
     "express": "^4.17.1",
     "express-ipfilter": "^1.1.2",
     "nedb": "^1.8.0",
-    "selfsigned": "^1.10.8"
+    "selfsigned": "^1.10.8",
+    "uuid": "^8.3.2",
+    "ws": "^7.4.3"
   }
 }
