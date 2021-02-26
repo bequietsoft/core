@@ -5,18 +5,29 @@ body {
 	
 }
 
+div#setting_btn {
+	width: "32px";
+	height: "32px";
+	background-color: black;
+	border-radius: "5px";
+}
+
+/* navbar {
+	position: absolute;
+}  */
+
 /* button {
 	position: absolute;
 	left: 20pt;
 	top: 100pt;
 } */
 
-.panel {
+/* #cont1 {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-}
+} */
 
 /* 
 .inner {
@@ -48,7 +59,7 @@ input {
 
 button {
 	margin: 5px;
-} */
+} 
 
 .loader {
 	width: 130px;
@@ -70,11 +81,11 @@ button {
 }
 
 .test {
-	/* flex: 0.0001 1 180px; */
+	
 	position: absolute;
 	width: 200;
 	height: 200;
 	transition: flex 0.3s ease;	
 	background-color: wheat;
 	visibility: hidden;
-}
+} */

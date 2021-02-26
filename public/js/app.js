@@ -6,7 +6,7 @@ import Mouse from "./mouse.js";
 import Keyboard from "./keyboard.js";
 import TouchScreen from "./touchscreen.js";
 import Gyro from "./gyro.js";
-
+import Actions from "./actions.js";
 
 class App {
 	
@@ -40,6 +40,7 @@ class App {
 		Renderer.init(this);
 		World.init(this);
 		
+		App.actions = Actions;
 		App.input_inits(this);
 
         App.onresize();
@@ -144,6 +145,8 @@ class App {
 			log_element = document.createElement("div");
 			log_element.id = 'log';
 			log_element.style.position = 'absolute';
+			log_element.style.left = "10px";
+			log_element.style.top = "60px";
 			// log.style.width = '100%';
 			// log.style.height = '100%';
 			log_element.style.backgroundColor = '0x0000FF';
