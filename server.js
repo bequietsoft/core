@@ -1,65 +1,86 @@
+'use strict';
+
+const session = require('express-session');
 const express = require('express');
 const http = require('http');
-const ws = require("ws");
+const uuid = require('uuid');
 
-//const ipfilter = require('express-ipfilter').IpFilter;
-//const https = require('https');
-//const UUID = require("uuid");
+const WebSocket = require('ws');
 
-//const fs = require('fs');
-//const Datastore = require('nedb');
-//const ips = ['127.0.0.2']
+const app = express();
+const map = new Map();
 
-const port = 3600;
-const app = express();     
-const http_server = http.createServer(app);     
-const websocket_server = new ws.Server({ server: http_server });
-
-app.use(express.static('public'));
-
-websocket_server.on('connection', websocket => {
-    
-    websocket.on('message', msg => {
-        websocket_server.clients.forEach( client => client.send(msg) );
-    });
-
-    websocket.on("error", err => ws.send(err) );
-
-    console.log(ws);
-    websocket.send('Hi there, I am a WebSocket server');
-
+// We need the same instance of the session parser in express and WebSocket server.
+const sessionParser = session({
+  saveUninitialized: false,
+  secret: 'test',
+  resave: false
 });
 
-http_server.listen(port);//, () => console.log("Server started"));
+// Serve static files from the 'public' folder.
+app.use(express.static('public'));
+app.use(sessionParser);
 
+app.post('/login', function (req, res) {
+  // "Log in" user and set userId to session.
+  const id = uuid.v4();
 
-// app.use(ipfilter(ips, { mode: 'allow' }));
+  console.log(`Updating session for user ${id}`);
+  req.session.userId = id;
+  res.send({ result: 'OK', message: 'Session updated' });
+});
 
-//let db = new Datastore({filename: 'db/users'});
-//db.loadDatabase();
+app.delete('/logout', function (request, response) {
+  const ws = map.get(request.session.userId);
 
-// var options = {
-// 	key: fs.readFileSync('/ssl/private.key'),
-// 	cert: fs.readFileSync('/ssl/cert.key')
-// };
+  console.log('Destroying session');
+  request.session.destroy(function () {
+    if (ws) ws.close();
 
-//let ssl = await devcert.certificateFor('core.test');
+    response.send({ result: 'OK', message: 'Session destroyed' });
+  });
+});
 
-//https.createServer(options, app).listen(3002);
-//http.createServer(app).listen(port);
-//http.createServer(app).listen(80, '192.168.1.69');
+// Create an HTTP server.
+const server = http.createServer(app);
 
-// // web socket server:
-// const websocketserver = new WebSocket.Server({ port: port+1 });
-// function broadcast(clientId, message) {
-//     websocketserver.clients.forEach(client => {
-//     if(client.readyState === WebSocket.OPEN) {
-//         client.send(`[${clientId}]: ${message}`);
-//     }
-//   });
-// }
+// Create a WebSocket server completely detached from the HTTP server.
+const wss = new WebSocket.Server({ clientTracking: false, noServer: true });
 
-// websocketserver.on('conection', socket => {
-//     socket.id = UUID();
-//     socket.on('message', message => broadcast(socket.id, message));
-// });
+server.on('upgrade', function (request, socket, head) {
+  console.log('Parsing session from request...');
+
+  sessionParser(request, {}, () => {
+    if (!request.session.userId) {
+      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+
+    console.log('Session is parsed!');
+
+    wss.handleUpgrade(request, socket, head, function (ws) {
+      wss.emit('connection', ws, request);
+    });
+  });
+});
+
+wss.on('connection', function (ws, request) {
+  const userId = request.session.userId;
+
+  map.set(userId, ws);
+
+  ws.on('message', function (message) {
+    // Here we can now use session parameters.
+    console.log(`Received message ${message} from user ${userId}`);
+  });
+
+  ws.on('close', function () {
+    map.delete(userId);
+  });
+});
+
+// Start the server.
+server.listen(8080, function () {
+  console.log('Listening on http://localhost:8080');
+});
